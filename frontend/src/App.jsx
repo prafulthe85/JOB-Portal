@@ -54,7 +54,38 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
-        <Toaster />
+        {/* <Toaster /> */}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            success: {
+              style: {
+                background: "#d1fae5",
+                color: "#065f46",
+                border: "1px solid #10b981",
+                fontWeight: "600",
+                fontSize: "16px",
+              },
+              iconTheme: {
+                primary: "#10b981",
+                secondary: "#ecfdf5",
+              },
+            },
+            error: {
+              style: {
+                background: "#fee2e2",
+                color: "#991b1b",
+                border: "1px solid #f87171",
+                fontWeight: "600",
+                fontSize: "16px",
+              },
+              iconTheme: {
+                primary: "#ef4444",
+                secondary: "#fff1f2",
+              },
+            },
+          }}
+        />
       </BrowserRouter>
     </>
   );

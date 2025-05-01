@@ -31,7 +31,9 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      toast.success(data.message);
+      // toast.success(data.message);
+      console.log("data.message: ", data.message);
+      toast.success("🎉 Logged in successfully! ");
       setName("");
       setEmail("");
       setPassword("");
@@ -39,7 +41,8 @@ const Register = () => {
       setRole("");
       setIsAuthorized(true);
     } catch (error) {
-      toast.error(error.response.data.message);
+      // toast.error(error.response.data.message);
+      toast.error("❌ Invalid credentials ", error);
     }
   };
 
