@@ -32,41 +32,48 @@ const JobDetails = () => {
       <div className="container">
         <h3>Job Details</h3>
         <div className="banner">
-          <p>
-            Title: <span> {job.title}</span>
-          </p>
-          <p>
-            Category: <span>{job.category}</span>
-          </p>
-          <p>
-            Country: <span>{job.country}</span>
-          </p>
-          <p>
-            City: <span>{job.city}</span>
-          </p>
-          <p>
-            Location: <span>{job.location}</span>
-          </p>
-          <p>
-            Description: <span>{job.description}</span>
-          </p>
-          <p>
-            Job Posted On: <span>{job.jobPostedOn}</span>
-          </p>
-          <p>
-            Salary:{" "}
-            {job.fixedSalary ? (
-              <span>{job.fixedSalary}</span>
-            ) : (
-              <span>
-                {job.salaryFrom} - {job.salaryTo}
-              </span>
-            )}
-          </p>
-          {user && user.role === "Employer" ? (
-            <></>
-          ) : (
-            <Link to={`/application/${job._id}`}>Apply Now</Link>
+          <div className="job-info">
+            <p>
+              <span className="job-label">Title:</span> <span>{job.title}</span>
+            </p>
+            <p>
+              <span className="job-label">Category:</span>{" "}
+              <span>{job.category}</span>
+            </p>
+            <p>
+              <span className="job-label">Country:</span>{" "}
+              <span>{job.country}</span>
+            </p>
+            <p>
+              <span className="job-label">City:</span> <span>{job.city}</span>
+            </p>
+            <p>
+              <span className="job-label">Location:</span>{" "}
+              <span>{job.location}</span>
+            </p>
+            <p>
+              <span className="job-label">Description:</span>{" "}
+              <span>{job.description}</span>
+            </p>
+            <p>
+              <span className="job-label">Job Posted On:</span>{" "}
+              <span>{job.jobPostedOn}</span>
+            </p>
+            <p>
+              <span className="job-label">Salary:</span>{" "}
+              {job.fixedSalary ? (
+                <span>{job.fixedSalary}</span>
+              ) : (
+                <span>
+                  {job.salaryFrom} - {job.salaryTo}
+                </span>
+              )}
+            </p>
+          </div>
+          {user && user.role !== "Employer" && (
+            <Link to={`/application/${job._id}`} className="apply-btn">
+              Apply Now
+            </Link>
           )}
         </div>
       </div>

@@ -61,6 +61,8 @@ const PopularCategories = () => {
       icon: <IoGameController />,
     },
   ];
+  const bgColors = ["#ffe0ec", "#e5f4ff", "#e6ffed", "#fff3cd", "#f5e6ff"];
+
   return (
     <div className="categories">
       <h3>POPULAR CATEGORIES</h3>
@@ -68,7 +70,16 @@ const PopularCategories = () => {
         {categories.map((element) => {
           return (
             <div className="card" key={element.id}>
-              <div className="icon">{element.icon}</div>
+              {/* <div className="icon">{element.icon}</div> */}
+              <div
+                className="icon"
+                style={{
+                  background:
+                    bgColors[Math.floor(Math.random() * bgColors.length)],
+                }}
+              >
+                {element.icon}
+              </div>
               <div className="text">
                 <p>{element.title}</p>
                 <p>{element.subTitle}</p>

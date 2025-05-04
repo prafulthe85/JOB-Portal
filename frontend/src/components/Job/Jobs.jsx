@@ -33,10 +33,16 @@ const Jobs = () => {
             jobs.jobs.map((element) => {
               return (
                 <div className="card" key={element._id}>
-                  <p>{element.title}</p>
-                  <p>{element.category}</p>
-                  <p>{element.country}</p>
-                  <Link to={`/job/${element._id}`}>Job Details</Link>
+                  <div className="job-details">
+                    <h2>{element.title}</h2>
+                    <p>{element.category}</p>
+                    <p>{element.country}</p>
+                  </div>
+                  <div className="job-actions">
+                    <Link to={`/job/${element._id}`} className="btn-details">
+                      Job Details
+                    </Link>
+                  </div>
                 </div>
               );
             })}
