@@ -5,11 +5,20 @@ import { FaCheck } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../main";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Loader";
 
 const MyJobs = () => {
   const [myJobs, setMyJobs] = useState([]);
   const [editingMode, setEditingMode] = useState(null);
   const { isAuthorized, user } = useContext(Context);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate an API call or any async operation
+    setTimeout(() => {
+      setIsLoading(false); // Set loading to false once the data has been fetched
+    }, 500); // Adjust the timeout as needed
+  }, []);
 
   const navigateTo = useNavigate();
   //Fetching all jobs
@@ -30,6 +39,9 @@ const MyJobs = () => {
   }, []);
   if (!isAuthorized || (user && user.role !== "Employer")) {
     navigateTo("/");
+  }
+  if (isLoading) {
+    return <Loader />;
   }
 
   //Function For Enabling Editing Mode

@@ -1,8 +1,10 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../main";
+import Loader from "../Loader";
+
 const Application = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -10,6 +12,14 @@ const Application = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [resume, setResume] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate an API call or any async operation
+    setTimeout(() => {
+      setIsLoading(false); // Set loading to false once the data has been fetched
+    }, 500); // Adjust the timeout as needed
+  }, []);
 
   const { isAuthorized, user } = useContext(Context);
 
@@ -60,6 +70,9 @@ const Application = () => {
 
   if (!isAuthorized || (user && user.role === "Employer")) {
     navigateTo("/");
+  }
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (

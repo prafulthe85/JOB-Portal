@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import ResumeModal from "./ResumeModal";
 import nodata from "../../assets/no-data.png";
+import Loader from "../Loader";
 
 const MyApplications = () => {
   const { user } = useContext(Context);
@@ -14,6 +15,13 @@ const MyApplications = () => {
 
   const { isAuthorized } = useContext(Context);
   const navigateTo = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Set loading to false once the data has been fetched
+    }, 500);
+  }, []);
 
   useEffect(() => {
     try {
@@ -51,6 +59,10 @@ const MyApplications = () => {
 
   if (!isAuthorized) {
     navigateTo("/");
+  }
+
+  if (isLoading) {
+    return <Loader />;
   }
 
   const deleteApplication = (id) => {

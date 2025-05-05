@@ -1426,6 +1426,52 @@ p {
   background: #24473b;
 }
 
+.aiwrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.aiwrapper p {
+  color: blueviolet;
+  font-weight: 500;
+  font-family: system-ui;
+  font-size: 0.8rem;
+}
+
+.aiwrapper input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  min-width: 200px;
+}
+
+.aiwrapper button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.aiwrapper button:hover {
+  background-color: #0056b3;
+}
+
+.ai-note {
+  color: #cd1c1c;
+  font-weight: 500;
+  font-family: system-ui;
+  font-size: 0.8rem;
+}
+
 @media (max-width: 900px) {
   .job_post .container {
     padding: 30px 20px;
@@ -1921,4 +1967,16 @@ nav .hamburger {
   .resume-modal {
     z-index: 11;
   }
+}
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
 }

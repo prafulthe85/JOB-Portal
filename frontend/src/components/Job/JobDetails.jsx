@@ -3,10 +3,20 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import Loader from "../Loader";
+
 const JobDetails = () => {
   const { id } = useParams();
   const [job, setJob] = useState({});
   const navigateTo = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate an API call or any async operation
+    setTimeout(() => {
+      setIsLoading(false); // Set loading to false once the data has been fetched
+    }, 500); // Adjust the timeout as needed
+  }, []);
 
   const { isAuthorized, user } = useContext(Context);
 
@@ -25,6 +35,10 @@ const JobDetails = () => {
 
   if (!isAuthorized) {
     navigateTo("/login");
+  }
+
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (
