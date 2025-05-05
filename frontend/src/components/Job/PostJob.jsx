@@ -140,7 +140,7 @@ const PostJob = () => {
                 onChange={(e) => setSalaryType(e.target.value)}
               >
                 <option value="default">Select Salary Type</option>
-                <option value="Fixed Salary">Fixed Salary</option>
+                <option value="Fixed Salary">Fixed Salary (eg:900000)</option>
                 <option value="Ranged Salary">Ranged Salary</option>
               </select>
               <div>

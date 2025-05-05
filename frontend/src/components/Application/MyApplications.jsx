@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import ResumeModal from "./ResumeModal";
+import nodata from "../../assets/no-data.png";
 
 const MyApplications = () => {
   const { user } = useContext(Context);
@@ -83,55 +84,40 @@ const MyApplications = () => {
 
   return (
     <section className="my_applications page">
-      {user && user.role === "Job Seeker" ? (
-        <div className="container">
-          <center>
-            <h1>My Applications</h1>
-          </center>
-          {applications.length <= 0 ? (
-            <>
-              {" "}
-              <center>
-                <h4>No Applications Found</h4>
-              </center>{" "}
-            </>
-          ) : (
-            applications.map((element) => {
-              return (
+      <div className="container">
+        <h2 className="section-heading">
+          {user?.role === "Job Seeker"
+            ? "My Applications"
+            : "Applications From Job Seekers"}
+        </h2>
+
+        {applications.length === 0 ? (
+          <div className="empty-state">
+            <img src={nodata} alt="No Data" />
+            <p>No applications found</p>
+          </div>
+        ) : (
+          <div className="applications-grid">
+            {applications.map((element) =>
+              user?.role === "Job Seeker" ? (
                 <JobSeekerCard
-                  element={element}
                   key={element._id}
+                  element={element}
                   deleteApplication={deleteApplication}
                   openModal={openModal}
                 />
-              );
-            })
-          )}
-        </div>
-      ) : (
-        <div className="container">
-          <center>
-            <h1>Applications From Job Seekers</h1>
-          </center>
-          {applications.length <= 0 ? (
-            <>
-              <center>
-                <h4>No Applications Found</h4>
-              </center>
-            </>
-          ) : (
-            applications.map((element) => {
-              return (
+              ) : (
                 <EmployerCard
-                  element={element}
                   key={element._id}
+                  element={element}
                   openModal={openModal}
                 />
-              );
-            })
-          )}
-        </div>
-      )}
+              )
+            )}
+          </div>
+        )}
+      </div>
+
       {modalOpen && (
         <ResumeModal imageUrl={resumeImageUrl} onClose={closeModal} />
       )}
