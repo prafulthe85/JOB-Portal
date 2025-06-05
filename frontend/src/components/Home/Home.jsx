@@ -23,18 +23,20 @@ const Home = () => {
     return <Navigate to={"/login"} />;
   }
 
-  if (isLoading) {
-    return <Loader />;
-  }
   return (
-    <>
-      <section className="homePage page">
-        <HeroSection />
-        <HowItWorks />
-        <PopularCategories />
-        <PopularCompanies />
-      </section>
-    </>
+    <section className="homePage page">
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <HeroSection />
+          <HowItWorks />
+          <PopularCategories />
+          <PopularCompanies />
+        </>
+      )}
+      ;
+    </section>
   );
 };
 

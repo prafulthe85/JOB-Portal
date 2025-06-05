@@ -34,6 +34,15 @@ const Application = () => {
   const { id } = useParams();
   const handleApplication = async (e) => {
     e.preventDefault();
+    if (!resume) {
+      toast.error("Please upload your resume (PDF)");
+      return;
+    }
+    if (resume.type !== "application/pdf") {
+      toast.error("Resume must be a PDF");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
@@ -50,9 +59,9 @@ const Application = () => {
         formData,
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          // headers: {
+          //   "Content-Type": "multipart/form-data",
+          // },
         }
       );
       setName("");

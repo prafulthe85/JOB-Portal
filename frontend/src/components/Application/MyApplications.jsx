@@ -139,6 +139,40 @@ const MyApplications = () => {
 
 export default MyApplications;
 
+const handleDownload = async (id) => {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/application/download/${id}`,
+      {
+        responseType: "blob", // important!
+        withCredentials: true,
+      }
+    );
+
+    const disposition = res.headers["content-disposition"];
+    let fileName = "resume.pdf"; // default
+    if (disposition && disposition.includes("filename=")) {
+      fileName = disposition.split("filename=")[1].replaceAll('"', "").trim();
+    }
+
+    const blob = new Blob([res.data], { type: res.headers["content-type"] });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    // Clean up the blob
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+    toast.error("Download failed");
+  }
+};
+
 const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
   return (
     <>
@@ -161,12 +195,55 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
           </p>
         </div>
         <div className="resume">
-          <img
-            src={element.resume.url}
-            alt="resume"
-            onClick={() => openModal(element.resume.url)}
-          />
+          {/* {element.resume.url.endsWith(".pdf") ? (
+            <a
+              href={element.resume.url}
+              download // ⬅️ This is key for download!
+              className="resume-link"
+            >
+              <button>Download Resume (PDF)</button>
+            </a>
+          ) : (
+            <a
+              href={element.resume.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="resume-link"
+            >
+              <img
+                src={element.resume.url}
+                alt="Resume"
+                className="resume-thumbnail"
+                style={{ maxWidth: "200px", cursor: "pointer" }}
+              />
+            </a>
+          )} */}
+
+          {/* <a
+            href={`${
+              import.meta.env.VITE_SERVER_URL
+            }/api/v1/application/download/${element._id}`}
+            // download
+            target="_blank"
+            rel="noopener noreferrer"
+            className="resume-link"
+          >
+            {element?.resume?.url?.endsWith(".pdf") ? (
+              <button>Download Resume (PDF)</button>
+            ) : (
+              <img
+                src={element.resume.url}
+                alt="Resume"
+                className="resume-thumbnail"
+                style={{ maxWidth: "200px", cursor: "pointer" }}
+              />
+            )}
+          </a> */}
+          <button onClick={() => handleDownload(element._id)}>
+            Download Resume (PDF)
+          </button>
         </div>
+
         <div className="btn_area">
           <button onClick={() => deleteApplication(element._id)}>
             Delete Application

@@ -6,8 +6,9 @@ import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import { Toaster } from "react-hot-toast";
 import axios from "axios";
-import Navbar from "./components/Layout/Navbar";
-import Footer from "./components/Layout/Footer";
+// import Navbar from "./components/Layout/Navbar";
+// import Footer from "./components/Layout/Footer";
+import Layout from "./components/Layout/Layout";
 import Home from "./components/Home/Home";
 import Jobs from "./components/Job/Jobs";
 import JobDetails from "./components/Job/JobDetails";
@@ -40,21 +41,25 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
+        {/* <Navbar /> */}
         <Routes>
+          <Route element={<Layout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/job/getall" element={<Jobs />} />
+            <Route path="/job/:id" element={<JobDetails />} />
+            <Route path="/application/:id" element={<Application />} />
+            <Route path="/applications/me" element={<MyApplications />} />
+            <Route path="/job/post" element={<PostJob />} />
+            <Route path="/job/me" element={<MyJobs />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/job/getall" element={<Jobs />} />
-          <Route path="/job/:id" element={<JobDetails />} />
-          <Route path="/application/:id" element={<Application />} />
-          <Route path="/applications/me" element={<MyApplications />} />
-          <Route path="/job/post" element={<PostJob />} />
-          <Route path="/job/me" element={<MyJobs />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <Footer />
-        {/* <Toaster /> */}
+        {/* <Footer /> */}
         <Toaster
           position="top-center"
           toastOptions={{

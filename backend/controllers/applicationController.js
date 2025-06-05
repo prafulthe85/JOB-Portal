@@ -11,37 +11,15 @@ export const postApplication = catchAsyncErrors(async (req, res, next) => {
       new ErrorHandler("Employer not allowed to access this resource.", 400)
     );
   }
-  if (!req.files || Object.keys(req.files).length === 0) {
+
+  const resume = req.file;
+
+  if (!resume || !resume.buffer) {
     return next(new ErrorHandler("Resume File Required!", 400));
   }
 
-  const { resume } = req.files;
-  const allowedFormats = [
-    "image/png",
-    "image/jpeg",
-    "image/webp",
-    "application/pdf",
-  ];
-  console.log(`Resume mimetype ${resume.mimetype}`);
-  if (!allowedFormats.includes(resume.mimetype)) {
-    return next(
-      new ErrorHandler("Invalid file type. Please upload a PNG file.", 400)
-    );
-  }
-  let cloudinaryResponse;
-  try {
-    cloudinaryResponse = await cloudinary.uploader.upload(resume.tempFilePath);
-  } catch (error) {
-    console.log(`error while uploading the file ${error}`);
-  }
+  // console.log(`Resume mimetype ${resume.mimetype}`);
 
-  if (!cloudinaryResponse || cloudinaryResponse.error) {
-    console.error(
-      "Cloudinary Error:",
-      cloudinaryResponse.error || "Unknown Cloudinary error"
-    );
-    return next(new ErrorHandler("Failed to upload Resume to Cloudinary", 500));
-  }
   const { name, email, coverLetter, phone, address, jobId } = req.body;
   const applicantID = {
     user: req.user._id,
@@ -80,8 +58,9 @@ export const postApplication = catchAsyncErrors(async (req, res, next) => {
     applicantID,
     employerID,
     resume: {
-      public_id: cloudinaryResponse.public_id,
-      url: cloudinaryResponse.secure_url,
+      data: resume.buffer,
+      contentType: resume.mimetype,
+      fileName: resume.originalname,
     },
   });
   res.status(200).json({
@@ -124,6 +103,29 @@ export const jobseekerGetAllApplications = catchAsyncErrors(
     });
   }
 );
+
+export const downloadResume = catchAsyncErrors(async (req, res, next) => {
+  const applicationId = req.params.id;
+
+  const application = await Application.findById(applicationId);
+
+  // console.log("application", application);
+  if (!application || !application.resume || !application.resume.data) {
+    return next(new ErrorHandler("Resume not found!", 404));
+  }
+
+  const fileBuffer = Buffer.from(application.resume.data);
+
+  res.set({
+    "Access-Control-Expose-Headers": "Content-Disposition",
+    "Content-Type": application.resume.contentType,
+    "Content-Disposition": `attachment; filename="${
+      application.resume.fileName || "resume.pdf"
+    }"`,
+  });
+
+  res.send(fileBuffer);
+});
 
 export const jobseekerDeleteApplication = catchAsyncErrors(
   async (req, res, next) => {
