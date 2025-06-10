@@ -104,6 +104,10 @@ p {
   min-height: 100vh;
   background: #f3f4f6;
 }
+
+.role-select {
+  cursor: pointer;
+}
 .authPage .container {
   flex: 1;
   display: flex;
@@ -371,6 +375,12 @@ p {
   border-radius: 8px;
   color: #1f4f46;
 }
+
+.heroSection .details .card .content {
+  display: flex;
+  flex-direction: column;
+}
+
 .heroSection .details .card .content p:first-child {
   font-weight: 700;
   font-size: 20px;
@@ -606,6 +616,7 @@ p {
 
 .categories .banner .card {
   width: 320px;
+  cursor: pointer;
   padding: 20px 25px;
   display: flex;
   align-items: center;
@@ -850,6 +861,9 @@ p {
 
   .companies .container .banner .card {
     width: 420px;
+  }
+  .companies .text p:first-child {
+    text-align: center;
   }
 }
 
@@ -1194,6 +1208,106 @@ p {
   flex-direction: column;
   gap: 30px;
 }
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 30px 20px;
+  border-radius: 15px;
+  max-width: 90%;
+  width: 526px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  animation: scaleIn 0.3s ease-in-out forwards;
+}
+
+.modal-message {
+  display: flex;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.modal-buttons-parent {
+  display: flex;
+  justify-content: end;
+}
+
+.modal-buttons {
+  padding: 0 10px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.modal-buttons button {
+  width: 120px;
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.yes-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.yes-button:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
+}
+
+.cancel-button {
+  background-color: #ecf0f1;
+  color: #2c3e50;
+}
+
+.cancel-button:hover {
+  background-color: #dcdde1;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
 .section-title {
   font-size: 2rem;
@@ -1278,27 +1392,34 @@ p {
 }
 
 /* === Resume Preview === */
-.job_seeker_card .resume {
-  flex: 1;
-  max-width: 220px;
-  position: relative;
-  height: 220px;
-  overflow: hidden;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+.job_seeker_card .resume button {
+  min-width: 140px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background-color: rgb(200, 200, 200); /* light grey */
+  color: #333;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.job_seeker_card .resume img {
+.job_seeker_card .resume button:hover {
+  background-color: rgb(170, 170, 170); /* slightly darker grey */
+  border-color: rgb(120, 120, 120); /* subtle darker border */
+}
+
+/* .job_seeker_card .resume img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: 0.3s;
-}
+} */
 
-.job_seeker_card .resume:hover img {
+/* .job_seeker_card .resume:hover img {
   transform: scale(1.05);
-}
+} */
 
 /* === Button Area === */
 .job_seeker_card .btn_area {
@@ -1697,6 +1818,9 @@ p {
 
   .content {
     flex-direction: column;
+  }
+
+  .card .content .text {
   }
 }
 

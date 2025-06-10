@@ -1,29 +1,30 @@
 import React from "react";
 import { FaBuilding, FaSuitcase, FaUsers, FaUserPlus } from "react-icons/fa";
+import CountUp from "react-countup";
 
 const HeroSection = () => {
   const details = [
     {
       id: 1,
-      title: "1,23,441",
+      title: 123441,
       subTitle: "Live Job",
       icon: <FaSuitcase />,
     },
     {
       id: 2,
-      title: "91220",
+      title: 91220,
       subTitle: "Companies",
       icon: <FaBuilding />,
     },
     {
       id: 3,
-      title: "2,34,200",
+      title: 234200,
       subTitle: "Job Seekers",
       icon: <FaUsers />,
     },
     {
       id: 4,
-      title: "1,03,761",
+      title: 103761,
       subTitle: "Employers",
       icon: <FaUserPlus />,
     },
@@ -51,7 +52,15 @@ const HeroSection = () => {
               <div className="card" key={element.id}>
                 <div className="icon">{element.icon}</div>
                 <div className="content">
-                  <p>{element.title}</p>
+                  <p>
+                    <CountUp
+                      end={element.title}
+                      duration={3}
+                      separator=","
+                      useEasing={false}
+                    />
+                    +
+                  </p>
                   <p>{element.subTitle}</p>
                 </div>
               </div>

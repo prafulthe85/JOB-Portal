@@ -6,24 +6,27 @@ const PopularCompanies = () => {
   const companies = [
     {
       id: 1,
-      title: "Microsoft",
-      location: "Millennium City Centre, Gurugram",
-      openPositions: 10,
-      icon: <FaMicrosoft />,
+      title: "Grazitti Interactive",
+      location: "IT Park, Chandigarh",
+      openPositions: 12,
+      url: "https://www.grazitti.com/company/careers/",
+      logo: "/GrazittiLogo.png",
     },
     {
       id: 2,
-      title: "Tesla",
-      location: "Millennium City Centre, Gurugram",
+      title: "OYO",
+      location: "IT Park, Gurugram",
       openPositions: 5,
-      icon: <SiTesla />,
+      url: "https://www.linkedin.com/company/oyo-rooms/jobs/",
+      logo: "/OYOlogo.png",
     },
     {
       id: 3,
-      title: "Apple",
-      location: "Millennium City Centre, Gurugram",
+      title: "Eternal",
+      location: "IT Park, Chandigarh",
       openPositions: 20,
-      icon: <FaApple />,
+      url: "https://www.eternal.com/careers/",
+      logo: "Eternal.webp",
     },
   ];
   return (
@@ -35,13 +38,25 @@ const PopularCompanies = () => {
             return (
               <div className="card" key={element.id}>
                 <div className="content">
-                  <div className="icon">{element.icon}</div>
+                  <div className="icon">
+                    {element.logo ? (
+                      <img
+                        src={element.logo}
+                        alt={element.title}
+                        style={{ width: "40px", height: "40px" }}
+                      />
+                    ) : (
+                      element.icon
+                    )}
+                  </div>
                   <div className="text">
                     <p>{element.title}</p>
                     <p>{element.location}</p>
                   </div>
                 </div>
-                <button>Open Positions {element.openPositions}</button>
+                <button onClick={() => window.open(element.url, "_blank")}>
+                  Open Positions {element.openPositions}
+                </button>
               </div>
             );
           })}

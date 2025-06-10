@@ -9,6 +9,7 @@ import { TbAppsFilled } from "react-icons/tb";
 import { FaReact } from "react-icons/fa";
 import { GiArtificialIntelligence } from "react-icons/gi";
 import { IoGameController } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const PopularCategories = () => {
   const categories = [
@@ -62,6 +63,7 @@ const PopularCategories = () => {
     },
   ];
   const bgColors = ["#ffe0ec", "#e5f4ff", "#e6ffed", "#fff3cd", "#f5e6ff"];
+  const navigate = useNavigate();
 
   return (
     <div className="categories">
@@ -69,7 +71,11 @@ const PopularCategories = () => {
       <div className="banner">
         {categories.map((element) => {
           return (
-            <div className="card" key={element.id}>
+            <div
+              className="card"
+              key={element.id}
+              onClick={() => navigate("/job/getall")}
+            >
               {/* <div className="icon">{element.icon}</div> */}
               <div
                 className="icon"

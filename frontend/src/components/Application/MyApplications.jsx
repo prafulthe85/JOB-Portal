@@ -8,82 +8,111 @@ import nodata from "../../assets/no-data.png";
 import Loader from "../Loader";
 
 const MyApplications = () => {
-  const { user } = useContext(Context);
+  const { user, isAuthorized } = useContext(Context);
   const [applications, setApplications] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [resumeImageUrl, setResumeImageUrl] = useState("");
-
-  const { isAuthorized } = useContext(Context);
-  const navigateTo = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const navigateTo = useNavigate();
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsLoading(false); // Set loading to false once the data has been fetched
+  //   }, 500);
+  // }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false); // Set loading to false once the data has been fetched
-    }, 500);
-  }, []);
-
-  useEffect(() => {
-    try {
-      if (user && user.role === "Employer") {
-        axios
-          .get(
-            `${
-              import.meta.env.VITE_SERVER_URL
-            }/api/v1/application/employer/getall`,
-            {
-              withCredentials: true,
-            }
-          )
-          .then((res) => {
-            setApplications(res.data.applications);
-          });
-      } else {
-        axios
-          .get(
-            `${
-              import.meta.env.VITE_SERVER_URL
-            }/api/v1/application/jobseeker/getall`,
-            {
-              withCredentials: true,
-            }
-          )
-          .then((res) => {
-            setApplications(res.data.applications);
-          });
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
+    if (!isAuthorized) {
+      navigateTo("/");
     }
-  }, [isAuthorized]);
+  }, [isAuthorized, navigateTo]);
 
-  if (!isAuthorized) {
-    navigateTo("/");
-  }
+  useEffect(() => {
+    const fetchApplications = async () => {
+      setIsLoading(true);
+      try {
+        let url = "";
+
+        if (user && user.role === "Employer") {
+          url = `${
+            import.meta.env.VITE_SERVER_URL
+          }/api/v1/application/employer/getall`;
+        } else {
+          url = `${
+            import.meta.env.VITE_SERVER_URL
+          }/api/v1/application/jobseeker/getall`;
+        }
+
+        const res = await axios.get(url, { withCredentials: true });
+        setApplications(res.data.applications);
+
+        // if (user && user.role === "Employer") {
+        //   axios
+        //     .get(
+        //       `${
+        //         import.meta.env.VITE_SERVER_URL
+        //       }/api/v1/application/employer/getall`,
+        //       {
+        //         withCredentials: true,
+        //       }
+        //     )
+        //     .then((res) => {
+        //       setApplications(res.data.applications);
+        //     });
+        // } else {
+        //   axios
+        //     .get(
+        //       `${
+        //         import.meta.env.VITE_SERVER_URL
+        //       }/api/v1/application/jobseeker/getall`,
+        //       {
+        //         withCredentials: true,
+        //       }
+        //     )
+        //     .then((res) => {
+        //       setApplications(res.data.applications);
+        //     });
+        // }
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+      {
+        setIsLoading(false);
+      }
+    };
+    if (isAuthorized && user) {
+      fetchApplications();
+    }
+  }, [isAuthorized, user]);
+
+  // if (!isAuthorized) {
+  //   navigateTo("/");
+  // }
+
+  const deleteApplication = async (id) => {
+    setIsLoading(true);
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/application/delete/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      toast.success(res.data.message);
+      setApplications((prevApplication) =>
+        prevApplication.filter((application) => application._id !== id)
+      );
+    } catch (error) {
+      toast.error(error.response.data.message || "Delete failed");
+    }
+    {
+      setIsLoading(false);
+    }
+  };
 
   if (isLoading) {
     return <Loader />;
   }
-
-  const deleteApplication = (id) => {
-    try {
-      axios
-        .delete(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/application/delete/${id}`,
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          toast.success(res.data.message);
-          setApplications((prevApplication) =>
-            prevApplication.filter((application) => application._id !== id)
-          );
-        });
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  };
 
   const openModal = (imageUrl) => {
     setResumeImageUrl(imageUrl);
@@ -93,6 +122,7 @@ const MyApplications = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
+  console.log("applications", applications);
 
   return (
     <section className="my_applications page">
@@ -174,6 +204,9 @@ const handleDownload = async (id) => {
 };
 
 const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null); // ID to delete
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   return (
     <>
       <div className="job_seeker_card">
@@ -195,61 +228,56 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
           </p>
         </div>
         <div className="resume">
-          {/* {element.resume.url.endsWith(".pdf") ? (
-            <a
-              href={element.resume.url}
-              download // ⬅️ This is key for download!
-              className="resume-link"
-            >
-              <button>Download Resume (PDF)</button>
-            </a>
-          ) : (
-            <a
-              href={element.resume.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="resume-link"
-            >
-              <img
-                src={element.resume.url}
-                alt="Resume"
-                className="resume-thumbnail"
-                style={{ maxWidth: "200px", cursor: "pointer" }}
-              />
-            </a>
-          )} */}
-
-          {/* <a
-            href={`${
-              import.meta.env.VITE_SERVER_URL
-            }/api/v1/application/download/${element._id}`}
-            // download
-            target="_blank"
-            rel="noopener noreferrer"
-            className="resume-link"
-          >
-            {element?.resume?.url?.endsWith(".pdf") ? (
-              <button>Download Resume (PDF)</button>
-            ) : (
-              <img
-                src={element.resume.url}
-                alt="Resume"
-                className="resume-thumbnail"
-                style={{ maxWidth: "200px", cursor: "pointer" }}
-              />
-            )}
-          </a> */}
           <button onClick={() => handleDownload(element._id)}>
             Download Resume (PDF)
           </button>
         </div>
 
-        <div className="btn_area">
+        {/* <div className="btn_area">
           <button onClick={() => deleteApplication(element._id)}>
+            Delete Application
+          </button>
+        </div> */}
+        <div className="btn_area">
+          <button
+            onClick={() => {
+              setConfirmDeleteId(element._id);
+              setShowConfirmModal(true);
+            }}
+          >
             Delete Application
           </button>
         </div>
       </div>
+
+      {showConfirmModal && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <div className="modal-message">
+              <p>Do you want to delete this application?</p>
+            </div>
+            <div className="modal-buttons-parent">
+              <div className="modal-buttons">
+                <button
+                  className="yes-button"
+                  onClick={() => {
+                    deleteApplication(confirmDeleteId);
+                    setShowConfirmModal(false);
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className="cancel-button"
+                  onClick={() => setShowConfirmModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
@@ -276,11 +304,9 @@ const EmployerCard = ({ element, openModal }) => {
           </p>
         </div>
         <div className="resume">
-          <img
-            src={element.resume.url}
-            alt="resume"
-            onClick={() => openModal(element.resume.url)}
-          />
+          <button onClick={() => handleDownload(element._id)}>
+            Download Resume (PDF)
+          </button>
         </div>
       </div>
     </>

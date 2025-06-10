@@ -53,7 +53,11 @@ const Login = () => {
             <div className="inputTag">
               <label>Login As</label>
               <div>
-                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                <select
+                  className="role-select"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                >
                   <option value="">Select Role</option>
 
                   <option value="Job Seeker">Job Seeker</option>
