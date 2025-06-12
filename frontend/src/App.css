@@ -1523,8 +1523,7 @@ p {
 .job_post .container form .wrapper input:focus,
 .job_post .container form .wrapper select:focus,
 .job_post .container form input:focus,
-.job_post .container form textarea:focus,
-.job_post .container form .salary_wrapper select:focus {
+.job_post .container form textarea:focus {
   outline: none;
   border-color: #2d5649;
   background: #fff;
@@ -1534,8 +1533,10 @@ p {
   resize: vertical;
   min-height: 120px;
 }
-
-.job_post .container form .salary_wrapper {
+.salary_wrapper {
+  width: 190px;
+}
+/* .job_post .container form .salary_wrapper {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1561,7 +1562,7 @@ p {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
-}
+} */
 
 .job_post .container form button {
   width: 100%;
@@ -1633,7 +1634,7 @@ p {
     padding: 30px 20px;
   }
 
-  .job_post .container form .wrapper,
+  /* .job_post .container form .wrapper,
   .job_post .container form .salary_wrapper .ranged_salary {
     flex-direction: column;
     gap: 20px;
@@ -1641,7 +1642,7 @@ p {
 
   .job_post .container form .salary_wrapper select {
     width: 100%;
-  }
+  } */
 }
 .myJobs {
   background-color: #f1f3f6;

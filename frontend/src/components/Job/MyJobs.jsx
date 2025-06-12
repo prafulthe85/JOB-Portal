@@ -214,61 +214,28 @@ const MyJobs = () => {
                           <span>
                             Salary:{" "}
                             {editingMode === element._id ? (
-                              // If in edit mode, show input fields for fixed salary or salary range
-                              element.fixedSalary ? (
-                                <input
-                                  type="number"
-                                  disabled={editingMode !== element._id}
-                                  value={element.fixedSalary}
-                                  onChange={(e) =>
-                                    handleInputChange(
-                                      element._id,
-                                      "fixedSalary",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                              ) : (
-                                <div>
-                                  <input
-                                    type="number"
-                                    disabled={editingMode !== element._id}
-                                    value={element.salaryFrom}
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        element._id,
-                                        "salaryFrom",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  <input
-                                    type="number"
-                                    disabled={editingMode !== element._id}
-                                    value={element.salaryTo}
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        element._id,
-                                        "salaryTo",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                </div>
-                              )
-                            ) : // If not in edit mode, display salary as text
-                            element.fixedSalary ? (
-                              <span>
-                                ₹{element.fixedSalary?.toLocaleString("en-IN")}
-                              </span>
+                              <input
+                                type="string"
+                                value={element.salary}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    element._id,
+                                    "salary",
+                                    e.target.value
+                                  )
+                                }
+                                style={{
+                                  appearance: "textfield",
+                                  MozAppearance: "textfield",
+                                  WebkitAppearance: "none",
+                                }}
+                              />
                             ) : (
                               <span>
-                                ₹{element.salaryFrom?.toLocaleString("en-IN")} -{" "}
-                                {element.salaryTo
-                                  ? `₹${element.salaryTo.toLocaleString(
-                                      "en-IN"
-                                    )}`
-                                  : "Not Provided"}
+                                ₹
+                                {Number(element.salary)?.toLocaleString(
+                                  "en-IN"
+                                ) || "Not Provided"}
                               </span>
                             )}
                           </span>

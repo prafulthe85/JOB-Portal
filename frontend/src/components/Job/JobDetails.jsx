@@ -74,14 +74,7 @@ const JobDetails = () => {
               <span>{job.jobPostedOn}</span>
             </p>
             <p>
-              <span className="job-label">Salary:</span>{" "}
-              {job.fixedSalary ? (
-                <span>{job.fixedSalary}</span>
-              ) : (
-                <span>
-                  {job.salaryFrom} - {job.salaryTo}
-                </span>
-              )}
+              <span className="job-label">Salary:</span> {job.salary}
             </p>
           </div>
           {user && user.role !== "Employer" && (
