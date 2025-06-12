@@ -102,7 +102,7 @@ const Application = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
-            type="number"
+            type="string"
             placeholder="Your Phone Number"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
