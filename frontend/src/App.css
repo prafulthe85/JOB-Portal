@@ -1645,19 +1645,19 @@ p {
   } */
 }
 .myJobs {
-  background-color: #f1f3f6;
+  background-color: #f7f9fc;
   padding: 50px 20px;
   min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  color: #222;
 }
 
 .myJobs .container {
-  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 35px;
-  padding: 0 20px;
+  gap: 40px;
 }
 
 .myJobs .banner {
@@ -1669,61 +1669,74 @@ p {
 .myJobs .card {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  gap: 24px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e3e7ee;
+}
+
+.myJobs .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
 }
 
 .card .content {
   flex: 3;
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
 .content span {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
 }
 
 .content input,
 .content select,
 .content textarea {
-  background: transparent;
-  font-size: 16px;
-  border: none;
-  color: #18191c;
-  padding: 8px;
+  background: #fff;
+  font-size: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #111827;
+  padding: 10px 14px;
   width: 100%;
   resize: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
-.content input:enabled,
-.content select:enabled,
-.content textarea:enabled {
-  border-bottom: 1px solid gainsboro;
-}
-
-.content input:disabled,
-.content select:disabled,
-.content textarea:disabled {
-  color: gray;
+.content input:hover,
+.content select:hover,
+.content textarea:hover {
+  cursor: text;
 }
 
 .content input:focus,
 .content select:focus,
 .content textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
   outline: none;
-  border-bottom: 1px solid #184235;
+}
+
+.content input:disabled,
+.content select:disabled,
+.content textarea:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
 }
 
 .short_fields,
 .long_field {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   flex: 1;
 }
 
@@ -1731,19 +1744,41 @@ p {
 .long_field div {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+}
+
+.long_field textarea {
+  height: 120px;
+  overflow-y: auto;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* Custom Scrollbar for description */
+.long_field textarea::-webkit-scrollbar {
+  width: 6px;
+}
+.long_field textarea::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+.long_field textarea::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+}
+.long_field textarea::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }
 
 .short_fields div div {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .button_wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
   justify-content: center;
 }
@@ -1751,65 +1786,70 @@ p {
 .button_wrapper .edit_btn,
 .button_wrapper .delete_btn {
   width: 120px;
-  padding: 10px;
+  padding: 10px 12px;
   font-size: 14px;
   font-weight: 600;
-  text-transform: uppercase;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  text-transform: capitalize;
+  transition: background-color 0.3s ease;
 }
 
 .edit_btn {
-  background-color: #ffc107;
-  color: #18191c;
+  background-color: #2210d054;
+  color: #1e293b;
+}
+.edit_btn:hover {
+  background-color: #23a4d2d4;
+  color: #494949;
 }
 
 .delete_btn {
-  background-color: #d9534f;
-  color: #fff;
+  background-color: #ef4444db;
+  color: #ffffff;
+}
+.delete_btn:hover {
+  background-color: #dc2626;
 }
 
 .check_btn,
 .cross_btn {
-  width: 45px;
-  height: 45px;
+  width: 42px;
+  height: 42px;
   font-size: 18px;
-  border-radius: 7px;
+  border-radius: 6px;
   border: 1px solid;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .check_btn {
-  border-color: #184235;
-  color: #184235;
+  border-color: #16a34a;
+  color: #16a34a;
   background: transparent;
 }
-
 .check_btn:hover {
-  background-color: #184235;
-  color: #fff;
-  transition: all 0.3s;
+  background-color: #16a34a;
+  color: #ffffff;
 }
 
 .cross_btn {
-  border-color: #d9534f;
-  color: #d9534f;
+  border-color: #dc2626;
+  color: #dc2626;
   background: transparent;
 }
-
 .cross_btn:hover {
-  background-color: #d9534f;
-  color: #fff;
-  transition: all 0.3s;
+  background-color: #dc2626;
+  color: #ffffff;
 }
 
 .edit_btn_wrapper {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 @media (max-width: 992px) {
