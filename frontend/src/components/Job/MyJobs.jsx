@@ -12,6 +12,8 @@ const MyJobs = () => {
   const [editingMode, setEditingMode] = useState(null);
   const { isAuthorized, user } = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   useEffect(() => {
     // Simulate an API call or any async operation
@@ -322,15 +324,18 @@ const MyJobs = () => {
                             onClick={() => handleEnableEdit(element._id)}
                             className="edit_btn"
                           >
-                            Edit
+                            EDIT
                           </button>
                         )}
                       </div>
                       <button
-                        onClick={() => handleDeleteJob(element._id)}
+                        onClick={() => {
+                          setConfirmDeleteId(element._id);
+                          setShowConfirmModal(true);
+                        }}
                         className="delete_btn"
                       >
-                        Delete
+                        DELETE
                       </button>
                     </div>
                   </div>
@@ -344,6 +349,35 @@ const MyJobs = () => {
           )}
         </div>
       </div>
+
+      {showConfirmModal && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <div className="modal-message">
+              <p>Do you want to delete this JOB?</p>
+            </div>
+            <div className="modal-buttons-parent">
+              <div className="modal-buttons">
+                <button
+                  className="yes-button"
+                  onClick={() => {
+                    handleDeleteJob(confirmDeleteId);
+                    setShowConfirmModal(false);
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className="cancel-button"
+                  onClick={() => setShowConfirmModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
