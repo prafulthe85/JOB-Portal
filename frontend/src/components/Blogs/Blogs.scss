@@ -1,0 +1,167 @@
+/* Blogs.css */
+
+.blogs-page {
+  padding: 2rem;
+  //   padding-top: 100px;
+  font-family: Arial, sans-serif;
+}
+
+.blog_container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 2rem;
+}
+
+.post-button {
+  padding: 0.5rem 1rem;
+  background-color: #2d5649;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.post-button:hover {
+  background-color: #24463a;
+}
+
+.blogs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.blog-card {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fafafa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Modal styles */
+
+/* Animation base */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-content_blog {
+  background: white;
+  padding: 30px;
+  width: 90%;
+
+  position: relative;
+  top: 3%;
+  max-width: 900px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-30px);
+  transition: transform 0.3s ease;
+}
+
+.modal-backdrop.show .modal-content_blog {
+  transform: translateY(0);
+}
+
+/* .modal-content_blog {
+  background: white;
+  padding: 2rem;
+  width: 90%;
+  max-width: 900px;
+  top: 3%;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+} */
+
+.modal-content_blog h2 {
+  margin-bottom: 1rem;
+}
+
+.modal-content_blog input,
+.modal-content_blog select,
+.modal-content_blog textarea {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal-actions button:first-child {
+  background-color: #2d5649;
+  color: white;
+}
+
+.modal-actions button:last-child {
+  background-color: #ccc;
+  color: black;
+}
+
+.modal-actions button:first-child:hover {
+  background-color: #24463a;
+}
+
+.modal-actions button:last-child:hover {
+  background-color: #aaa;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters input,
+.filters select,
+.filters button {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 1130px) {
+  .blogs-page {
+    padding-top: 100px;
+  }
+}

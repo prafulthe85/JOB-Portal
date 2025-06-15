@@ -1,7 +1,8 @@
 import express from "express";
 import dbConnection from "./database/dbConnection.js";
-import jobRouter from "./routes/jobRoutes.js";
 import userRouter from "./routes/userRoutes.js";
+import jobRouter from "./routes/jobRoutes.js";
+import blogsRouter from "./routes/blogsRouter.js";
 import applicationRouter from "./routes/applicationRoutes.js";
 import { config } from "dotenv";
 import cors from "cors";
@@ -25,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
+app.use("/api/v1/blogs", blogsRouter);
 app.use("/api/v1/application", applicationRouter);
 dbConnection();
 

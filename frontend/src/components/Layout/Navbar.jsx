@@ -65,6 +65,11 @@ const Navbar = () => {
               </li>
             </>
           ) : null}
+          <li>
+            <Link to={"/blogs"} onClick={() => setShow(false)}>
+              BLOGS
+            </Link>
+          </li>
 
           <button onClick={handleLogout}>LOGOUT</button>
         </ul>
