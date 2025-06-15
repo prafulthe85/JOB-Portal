@@ -42,7 +42,8 @@ const Register = () => {
       setIsAuthorized(true);
     } catch (error) {
       // toast.error(error.response.data.message);
-      toast.error("❌ Invalid credentials ", error);
+      console.log(error.response.data);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -98,7 +99,7 @@ const Register = () => {
               <label>Phone Number</label>
               <div>
                 <input
-                  type="number"
+                  type="string"
                   placeholder="Enter your phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}

@@ -6,6 +6,7 @@ import {
   getSingleJob,
   postJob,
   updateJob,
+  generateAIJobDetails,
 } from "../controllers/jobController.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 
@@ -17,5 +18,6 @@ router.get("/getmyjobs", isAuthenticated, getMyJobs);
 router.put("/update/:id", isAuthenticated, updateJob);
 router.delete("/delete/:id", isAuthenticated, deleteJob);
 router.get("/:id", isAuthenticated, getSingleJob);
+router.post("/generate-job", isAuthenticated, generateAIJobDetails);
 
 export default router;

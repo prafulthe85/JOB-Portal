@@ -106,65 +106,83 @@ const PostJob = () => {
 
   const handleGenerateJob = async () => {
     setIsLoading(true);
+
     try {
-      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_OPEN_ROUTER_KEY}`, // replace with your key
+      const res = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/job/generate-job`,
+        {
+          aiPrompt,
         },
-        body: JSON.stringify({
-          model: "mistralai/mistral-7b-instruct",
-          messages: [
-            {
-              role: "user",
-              content: `You are an intelligent job data generator.
+        {
+          withCredentials: true,
+        }
+      );
 
-                Given a free-form text that describes a job, generate a structured JSON object with the following fields:
+      const reply = res.data?.content;
 
-                {
-                  "title": "Job title",
-                  "category": "Job category ",
-                  "country": "Country name",
-                  "city": "City name",
-                  "location": "Full location (City + Country)",
-                  "salary": "Salary range or amount",
-                  "description": {
-                    "requirement": "Write 2-3 sentences describing the top requirements of the job. Use a natural tone, not bullet points.",
-                    "experience": "Write the experience needed for this role in a short sentence.",
-                    "skills": "Write 3-4 sentences explaining the important skills needed for the job. Mention technologies, tools, and soft skills.",
-                    "responsibility": "Write 3-4 sentences detailing the key responsibilities in this role. Describe daily tasks and what the person will be expected to deliver."
-                  }
-                }
+      if (!reply) throw new Error("No reply from backend");
 
-                Rules:
-                - Output must be ONLY in JSON format.
-                - If any detail is missing in the input, make a reasonable assumption based on the job context.
-                - Do not include explanations or text outside the JSON.
-                - **For "category", if possible, pick a value from the following list**:
-                  - Graphics & Design
-                  - Mobile App Development
-                  - Frontend Web Development
-                  - Backend Web Development
-                  - Account & Finance
-                  - Artificial Intelligence
-                  - Video Animation
-                  - Software Engineer
-                  - DevOps Engineer
+      // const jobDetails = extractJobDetailsNew(reply);
 
-                Now based on this job description: ${aiPrompt}`,
-            },
-          ],
-        }),
-      });
+      // try {
+      //   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${import.meta.env.VITE_OPEN_ROUTER_KEY}`, // replace with your key
+      //     },
+      //     body: JSON.stringify({
+      //       model: "mistralai/mistral-7b-instruct",
+      //       messages: [
+      //         {
+      //           role: "user",
+      //           content: `You are an intelligent job data generator.
 
-      const data = await res.json();
-      // console.log("🧠 AI Raw Response DATA:\n", data);
-      const reply = data.choices?.[0]?.message?.content;
+      //             Given a free-form text that describes a job, generate a structured JSON object with the following fields:
 
-      if (!reply) throw new Error("No response from model");
+      //             {
+      //               "title": "Job title",
+      //               "category": "Job category ",
+      //               "country": "Country name",
+      //               "city": "City name",
+      //               "location": "Full location (City + Country)",
+      //               "salary": "Salary range or amount",
+      //               "description": {
+      //                 "requirement": "Write 2-3 sentences describing the top requirements of the job. Use a natural tone, not bullet points.",
+      //                 "experience": "Write the experience needed for this role in a short sentence.",
+      //                 "skills": "Write 3-4 sentences explaining the important skills needed for the job. Mention technologies, tools, and soft skills.",
+      //                 "responsibility": "Write 3-4 sentences detailing the key responsibilities in this role. Describe daily tasks and what the person will be expected to deliver."
+      //               }
+      //             }
 
-      console.log("🧠 AI Raw Response:\n", reply);
+      //             Rules:
+      //             - Output must be ONLY in JSON format.
+      //             - If any detail is missing in the input, make a reasonable assumption based on the job context.
+      //             - Do not include explanations or text outside the JSON.
+      //             - **For "category", if possible, pick a value from the following list**:
+      //               - Graphics & Design
+      //               - Mobile App Development
+      //               - Frontend Web Development
+      //               - Backend Web Development
+      //               - Account & Finance
+      //               - Artificial Intelligence
+      //               - Video Animation
+      //               - Software Engineer
+      //               - DevOps Engineer
+
+      //             Now based on this job description: ${aiPrompt}`,
+      //         },
+      //       ],
+      //     }),
+      //   });
+
+      //   const data = await res.json();
+      //   // console.log("🧠 AI Raw Response DATA:\n", data);
+      //   const reply = data.choices?.[0]?.message?.content;
+
+      //   if (!reply) throw new Error("No response from model");
+
+      //   console.log("🧠 AI Raw Response:\n", reply);
 
       // const jobDetails = extractJobDetails(reply);
       const jobDetails = extractJobDetailsNew(reply);
