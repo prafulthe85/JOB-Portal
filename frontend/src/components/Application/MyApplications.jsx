@@ -7,14 +7,16 @@ import { useNavigate } from "react-router-dom";
 import ResumeModal from "./ResumeModal";
 import nodata from "../../assets/no-data.png";
 import Loader from "../Loader";
-// import ConfirmModal from "../Modal/ConfirmModal";
-
+import ConfirmModal from "../Modal/ConfirmModal.jsx";
 const MyApplications = () => {
   const { user, isAuthorized } = useContext(Context);
   const [applications, setApplications] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [resumeImageUrl, setResumeImageUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedIdToDelete, setSelectedIdToDelete] = useState(null);
+
   const navigateTo = useNavigate();
 
   useEffect(() => {
@@ -90,6 +92,7 @@ const MyApplications = () => {
   };
 
   return (
+    <>
     <section className="my_applications page">
       <div className="container">
         <h2 className="section-heading">
@@ -110,8 +113,12 @@ const MyApplications = () => {
                 <JobSeekerCard
                   key={element._id}
                   element={element}
-                  deleteApplication={deleteApplication}
+                    // deleteApplication={deleteApplication}
                   openModal={openModal}
+                    triggerDelete={(id) => {
+                      setSelectedIdToDelete(id);
+                      setShowConfirmModal(true);
+                    }}
                 />
               ) : (
                 <EmployerCard
@@ -129,6 +136,22 @@ const MyApplications = () => {
         <ResumeModal imageUrl={resumeImageUrl} onClose={closeModal} />
       )}
     </section>
+
+      {showConfirmModal && (
+        <ConfirmModal
+          message="Do you want to delete the application?"
+          onConfirm={() => {
+            deleteApplication(selectedIdToDelete);
+            setShowConfirmModal(false);
+            setSelectedIdToDelete(null);
+          }}
+          onCancel={() => {
+            setShowConfirmModal(false);
+            setSelectedIdToDelete(null);
+          }}
+        />
+      )}
+    </>
   );
 };
 
@@ -168,8 +191,12 @@ const handleDownload = async (id) => {
   }
 };
 
-const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
-  console.log("element", element);
+const JobSeekerCard = ({
+  element,
+  deleteApplication,
+  openModal,
+  triggerDelete,
+}) => {
   return (
     <>
       <div className="job_seeker_card">
@@ -197,7 +224,7 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
         </div>
 
         <div className="btn_area">
-          <button onClick={() => deleteApplication(element._id)}>
+          <button onClick={() => triggerDelete(element._id)}>
             Delete Application
           </button>
         </div>

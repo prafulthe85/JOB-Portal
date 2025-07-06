@@ -6,23 +6,24 @@ import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../main";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
+import ConfirmModal from "../Modal/ConfirmModal";
 
 const MyJobs = () => {
+  const navigate = useNavigate();
+  const { isAuthorized, user } = useContext(Context);
+
   const [myJobs, setMyJobs] = useState([]);
   const [editingMode, setEditingMode] = useState(null);
-  const { isAuthorized, user } = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [selectedIdToDelete, setSelectedIdToDelete] = useState(null);
 
   useEffect(() => {
-    // Simulate an API call or any async operation
-    setTimeout(() => {
-      setIsLoading(false); // Set loading to false once the data has been fetched
-    }, 500); // Adjust the timeout as needed
-  }, []);
+    if (!isAuthorized || (user && user.role !== "Employer")) {
+      navigate("/");
+    }
+  }, [isAuthorized, navigate, user]);
 
-  const navigateTo = useNavigate();
   //Fetching all jobs
   useEffect(() => {
     const fetchJobs = async () => {
@@ -35,16 +36,14 @@ const MyJobs = () => {
       } catch (error) {
         toast.error(error.response.data.message);
         setMyJobs([]);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchJobs();
   }, []);
-  if (!isAuthorized || (user && user.role !== "Employer")) {
-    navigateTo("/");
-  }
-  if (isLoading) {
-    return <Loader />;
-  }
+
+  if (isLoading) return <Loader />;
 
   //Function For Enabling Editing Mode
   const handleEnableEdit = (jobId) => {
@@ -79,6 +78,7 @@ const MyJobs = () => {
 
   //Function For Deleting Job
   const handleDeleteJob = async (jobId) => {
+    setIsLoading(true);
     await axios
       .delete(`${import.meta.env.VITE_SERVER_URL}/api/v1/job/delete/${jobId}`, {
         withCredentials: true,
@@ -90,6 +90,7 @@ const MyJobs = () => {
       .catch((error) => {
         toast.error(error.response.data.message);
       });
+    setIsLoading(false);
   };
 
   const handleInputChange = (jobId, field, value) => {
@@ -330,7 +331,7 @@ const MyJobs = () => {
                       </div>
                       <button
                         onClick={() => {
-                          setConfirmDeleteId(element._id);
+                          setSelectedIdToDelete(element._id);
                           setShowConfirmModal(true);
                         }}
                         className="delete_btn"
@@ -351,32 +352,18 @@ const MyJobs = () => {
       </div>
 
       {showConfirmModal && (
-        <div className="modal-backdrop">
-          <div className="modal-content">
-            <div className="modal-message">
-              <p>Do you want to delete this JOB?</p>
-            </div>
-            <div className="modal-buttons-parent">
-              <div className="modal-buttons">
-                <button
-                  className="yes-button"
-                  onClick={() => {
-                    handleDeleteJob(confirmDeleteId);
-                    setShowConfirmModal(false);
-                  }}
-                >
-                  Yes
-                </button>
-                <button
-                  className="cancel-button"
-                  onClick={() => setShowConfirmModal(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          message="Do you want to delete this JOB?"
+          onConfirm={() => {
+            handleDeleteJob(selectedIdToDelete);
+            setShowConfirmModal(false);
+            setSelectedIdToDelete(null);
+          }}
+          onCancel={() => {
+            setShowConfirmModal(false);
+            setSelectedIdToDelete(null);
+          }}
+        />
       )}
     </>
   );

@@ -10,15 +10,13 @@ const JobDetails = () => {
   const [job, setJob] = useState({});
   const navigateTo = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const { isAuthorized, user } = useContext(Context);
 
   useEffect(() => {
-    // Simulate an API call or any async operation
-    setTimeout(() => {
-      setIsLoading(false); // Set loading to false once the data has been fetched
-    }, 500); // Adjust the timeout as needed
-  }, []);
-
-  const { isAuthorized, user } = useContext(Context);
+    if (!isAuthorized) {
+      navigateTo("/login");
+    }
+  }, [isAuthorized, navigateTo]);
 
   useEffect(() => {
     axios
@@ -27,6 +25,7 @@ const JobDetails = () => {
       })
       .then((res) => {
         setJob(res.data.job);
+        setIsLoading(false);
       })
       .catch((error) => {
         navigateTo("/notfound");

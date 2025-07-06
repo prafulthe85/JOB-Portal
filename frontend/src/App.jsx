@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./App.css";
 import { Context } from "./main";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -18,8 +18,11 @@ import PostJob from "./components/Job/PostJob";
 import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
 import Blogs from "./components/Blogs/Blogs";
+import Loader from "./components/Loader.jsx";
 const App = () => {
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -33,19 +36,22 @@ const App = () => {
         setIsAuthorized(true);
       } catch (error) {
         setIsAuthorized(false);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUser();
   }, [isAuthorized]);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <>
       <BrowserRouter>
-        {/* <Navbar /> */}
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
             <Route path="/" element={<Home />} />
             <Route path="/job/getall" element={<Jobs />} />
             <Route path="/job/:id" element={<JobDetails />} />
@@ -61,7 +67,6 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* <Footer /> */}
         <Toaster
           position="top-center"
           toastOptions={{

@@ -14,16 +14,17 @@ const Application = () => {
   const [resume, setResume] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate an API call or any async operation
-    setTimeout(() => {
-      setIsLoading(false); // Set loading to false once the data has been fetched
-    }, 500); // Adjust the timeout as needed
-  }, []);
-
   const { isAuthorized, user } = useContext(Context);
-
+  const { id } = useParams();
   const navigateTo = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthorized || (user && user.role === "Employer")) {
+      navigateTo("/");
+    } else {
+      setIsLoading(false);
+    }
+  }, [isAuthorized, user, navigateTo]);
 
   // Function to handle file input changes
   const handleFileChange = (event) => {
@@ -31,7 +32,6 @@ const Application = () => {
     setResume(resume);
   };
 
-  const { id } = useParams();
   const handleApplication = async (e) => {
     e.preventDefault();
     if (!resume) {
@@ -53,7 +53,6 @@ const Application = () => {
     formData.append("jobId", id);
 
     try {
-      console.log(`Data in payload: ${[...formData]}`);
       const { data } = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/application/post`,
         formData,
@@ -77,9 +76,6 @@ const Application = () => {
     }
   };
 
-  if (!isAuthorized || (user && user.role === "Employer")) {
-    navigateTo("/");
-  }
   if (isLoading) {
     return <Loader />;
   }
