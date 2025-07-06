@@ -1208,7 +1208,7 @@ p {
   flex-direction: column;
   gap: 30px;
 }
-.modal-backdrop {
+/* .modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -1220,7 +1220,6 @@ p {
   align-items: center;
   justify-content: center;
   z-index: 999;
-  animation: fadeIn 0.3s ease-in-out;
 }
 
 .modal-content {
@@ -1234,7 +1233,6 @@ p {
   width: 526px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  animation: scaleIn 0.3s ease-in-out forwards;
 }
 
 .modal-message {
@@ -1307,7 +1305,7 @@ p {
     transform: scale(1);
     opacity: 1;
   }
-}
+} */
 
 .section-title {
   font-size: 2rem;

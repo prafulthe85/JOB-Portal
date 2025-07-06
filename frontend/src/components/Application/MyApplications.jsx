@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../main";
 import axios from "axios";
@@ -6,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import ResumeModal from "./ResumeModal";
 import nodata from "../../assets/no-data.png";
 import Loader from "../Loader";
+// import ConfirmModal from "../Modal/ConfirmModal";
 
 const MyApplications = () => {
   const { user, isAuthorized } = useContext(Context);
@@ -15,19 +17,15 @@ const MyApplications = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigateTo = useNavigate();
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsLoading(false); // Set loading to false once the data has been fetched
-  //   }, 500);
-  // }, []);
-
   useEffect(() => {
+    console.log("-------111 isAuthorized", isAuthorized);
     if (!isAuthorized) {
       navigateTo("/");
     }
   }, [isAuthorized, navigateTo]);
 
   useEffect(() => {
+    console.log("-------222 fetchApplications", isAuthorized);
     const fetchApplications = async () => {
       setIsLoading(true);
       try {
@@ -45,34 +43,6 @@ const MyApplications = () => {
 
         const res = await axios.get(url, { withCredentials: true });
         setApplications(res.data.applications);
-
-        // if (user && user.role === "Employer") {
-        //   axios
-        //     .get(
-        //       `${
-        //         import.meta.env.VITE_SERVER_URL
-        //       }/api/v1/application/employer/getall`,
-        //       {
-        //         withCredentials: true,
-        //       }
-        //     )
-        //     .then((res) => {
-        //       setApplications(res.data.applications);
-        //     });
-        // } else {
-        //   axios
-        //     .get(
-        //       `${
-        //         import.meta.env.VITE_SERVER_URL
-        //       }/api/v1/application/jobseeker/getall`,
-        //       {
-        //         withCredentials: true,
-        //       }
-        //     )
-        //     .then((res) => {
-        //       setApplications(res.data.applications);
-        //     });
-        // }
       } catch (error) {
         toast.error(error.response.data.message);
       }
@@ -85,11 +55,8 @@ const MyApplications = () => {
     }
   }, [isAuthorized, user]);
 
-  // if (!isAuthorized) {
-  //   navigateTo("/");
-  // }
-
   const deleteApplication = async (id) => {
+    console.log("inside deleteApplication", id);
     setIsLoading(true);
     try {
       const res = await axios.delete(
@@ -104,8 +71,7 @@ const MyApplications = () => {
       );
     } catch (error) {
       toast.error(error.response.data.message || "Delete failed");
-    }
-    {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -122,7 +88,6 @@ const MyApplications = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
-  console.log("applications", applications);
 
   return (
     <section className="my_applications page">
@@ -204,9 +169,7 @@ const handleDownload = async (id) => {
 };
 
 const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null); // ID to delete
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-
+  console.log("element", element);
   return (
     <>
       <div className="job_seeker_card">
@@ -233,51 +196,12 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
           </button>
         </div>
 
-        {/* <div className="btn_area">
-          <button onClick={() => deleteApplication(element._id)}>
-            Delete Application
-          </button>
-        </div> */}
         <div className="btn_area">
-          <button
-            onClick={() => {
-              setConfirmDeleteId(element._id);
-              setShowConfirmModal(true);
-            }}
-          >
+          <button onClick={() => deleteApplication(element._id)}>
             Delete Application
           </button>
         </div>
       </div>
-
-      {showConfirmModal && (
-        <div className="modal-backdrop">
-          <div className="modal-content">
-            <div className="modal-message">
-              <p>Do you want to delete this application?</p>
-            </div>
-            <div className="modal-buttons-parent">
-              <div className="modal-buttons">
-                <button
-                  className="yes-button"
-                  onClick={() => {
-                    deleteApplication(confirmDeleteId);
-                    setShowConfirmModal(false);
-                  }}
-                >
-                  Yes
-                </button>
-                <button
-                  className="cancel-button"
-                  onClick={() => setShowConfirmModal(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

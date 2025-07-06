@@ -8,6 +8,7 @@ import { config } from "dotenv";
 import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
+import { logger } from "../backend/utils/logger.js";
 
 const app = express();
 config({ path: "./config/config.env" });
@@ -20,6 +21,13 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  logger.info(
+    `Incoming request: ${req.method} ${req.url} at ${new Date().toISOString()} `
+  );
+  next();
+});
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +37,13 @@ app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/blogs", blogsRouter);
 app.use("/api/v1/application", applicationRouter);
 dbConnection();
+
+app.all("*", (req, res, next) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`,
+  });
+});
 
 app.use(errorMiddleware);
 export default app;
