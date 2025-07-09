@@ -157,3 +157,53 @@ export const evaluateBlog = async (req, res) => {
     });
   }
 };
+
+export const getDetailBlog = async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const currentUserId = req.user?._id?.toString() || null;
+    console.log("🔍 Blog ID requested:", blogId);
+
+    const blog = await Blogs.findById(blogId).populate(
+      "postedBy",
+      "name email"
+    );
+
+    if (!blog) {
+      console.log("❌ Blog not found for ID:", blogId);
+
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    const isAuthor = blog.postedBy._id.toString() === currentUserId;
+
+    console.log("✅ Blog found:", {
+      id: blog._id,
+      title: blog.title,
+      isAuthor,
+    });
+
+    res.status(200).json({
+      success: true,
+      blog: {
+        _id: blog._id,
+        title: blog.title,
+        category: blog.category,
+        content: blog.content,
+        name: blog.postedBy.name,
+        email: blog.postedBy.email,
+        createdAt: blog.createdAt,
+        isAuthor,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch blog",
+      error: error.message,
+    });
+  }
+};

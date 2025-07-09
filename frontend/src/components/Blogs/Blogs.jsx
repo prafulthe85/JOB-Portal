@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import Loader from "../Loader";
 import "./Blogs.scss";
@@ -25,6 +27,8 @@ const Blogs = () => {
     image: null,
     content: "",
   });
+
+  const navigate = useNavigate();
 
   // to disable the scroll when the popup of postblog is open
   useEffect(() => {
@@ -229,35 +233,20 @@ const Blogs = () => {
 
         <div className="blogs-list">
           {blogs.map((blog) => (
-            <div key={blog._id} className="blog-card">
+            <motion.div
+              key={blog._id}
+              className="blog-card stylish-card"
+              onClick={() => navigate(`/blogs/${blog._id}`)}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ scale: 1.03 }}
+            >
               <h2>{blog.title}</h2>
-
-              <button
-                className="post-button"
-                onClick={() => {
-                  BlogQuality(blog);
-                }}
-              >
-                Check Blog Quality
-              </button>
-              {blog.isAuthor && (
-                <span className="author-tag">👤 Your Blog</span>
-              )}
-              <p>
-                <strong>Author:</strong> {blog.name}
+              <p className="date">
+                {new Date(blog.createdAt).toLocaleDateString()}
               </p>
-              <p>
-                <strong>Created At: </strong>{" "}
-                {new Date(blog.createdAt).toLocaleString()}
-              </p>
-              <p>
-                <strong>Email:</strong> {blog.email}
-              </p>
-              <p>
-                <strong>Category:</strong> {blog.category}
-              </p>
-              <p>{blog.content}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
         <div className="pagination">

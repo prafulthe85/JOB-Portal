@@ -3,7 +3,7 @@ import {
   getAllBlogs,
   postBlog,
   // deleteBlog,
-  // getSingleBlog,
+  getDetailBlog,
 } from "../controllers/blogsController.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 import { uploadImage } from "../middlewares/multer.js";
@@ -18,6 +18,6 @@ router.post(
   postBlog
 );
 // router.post("/deleteblog/:id", deleteBlog);
-// router.get("/:id", getSingleBlog);
+router.get("/:id", isAuthenticated, getDetailBlog);
 
 export default router;

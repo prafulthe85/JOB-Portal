@@ -18,6 +18,7 @@ import PostJob from "./components/Job/PostJob";
 import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
 import Blogs from "./components/Blogs/Blogs";
+import BlogDetails from "./components/Blogs/BlogDetails";
 import Loader from "./components/Loader.jsx";
 const App = () => {
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
@@ -60,7 +61,7 @@ const App = () => {
             <Route path="/job/post" element={<PostJob />} />
             <Route path="/job/me" element={<MyJobs />} />
             <Route path="/blogs" element={<Blogs />} />
-
+            <Route path="/blogs/:id" element={<BlogDetails />} />
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="/login" element={<Login />} />

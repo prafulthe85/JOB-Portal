@@ -1,0 +1,59 @@
+.stylish-card {
+  background: linear-gradient(135deg, #e3f2fd, #ffffff);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.stylish-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.blogs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.blog-details-container {
+  max-width: 800px;
+  margin: 50px auto;
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.blog-details-container h1 {
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+}
+
+.blog-content {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333;
+  white-space: pre-line;
+}
+
+.meta {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 10px;
+}
+
+@media (max-width: 1130px) {
+  .blog-details-page {
+    padding-top: 100px;
+  }
+}
