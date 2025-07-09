@@ -58,6 +58,7 @@ const MyJobs = () => {
 
   //Function For Updating The Job
   const handleUpdateJob = async (jobId) => {
+    setIsLoading(true);
     const updatedJob = myJobs.find((job) => job._id === jobId);
     await axios
       .put(
@@ -74,6 +75,7 @@ const MyJobs = () => {
       .catch((error) => {
         toast.error(error.response.data.message);
       });
+    setIsLoading(false);
   };
 
   //Function For Deleting Job
