@@ -81,9 +81,38 @@ Contributions are what make the open-source community such an amazing place to l
 5. Open a Pull Request (`we will merge within 24 hour`)
 
 ## Please give a star to the repository if you like it.
+## 📬 Contact & Project Info
 
-## Contact
+**👤 Author:** Praful Gupta  
 
-Praful Gupta - [GitHub](https://github.com/prafulthe85)
+[![GitHub](https://img.shields.io/badge/GitHub-prafulthe85-181717?style=flat-square&logo=github)](https://github.com/prafulthe85)  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-prafulgupta85-blue?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/prafulgupta85/)  
+[![Instagram](https://img.shields.io/badge/Instagram-@candid__gmad__85_-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/candid_gmad_85/)
 
-Project Link: [https://github.com/prafulthe85/JOB-Portal.git](https://github.com/prafulthe85/JOB-Portal)
+---
+
+## 🚀 Project Links
+
+🔗 **Project Repository:**  
+[📂 JOB-Portal GitHub Repo](https://github.com/prafulthe85/JOB-Portal)
+
+🌐 **Live Hosted Link:**  
+[🔗 jobportalx.netlify.app](https://jobportalx.netlify.app/)
+
+---
+
+## 🔐 Demo Login Credentials
+
+**🧑 Employer**  
+- **Email:** `guptapraful130@gmail.com`  
+- **Password:** `Praful@1234`  
+
+**🙋 Job Seeker**  
+- **Email:** `guptapraful130+2@gmail.com`  
+- **Password:** `Praful@1234`
+
+---
+
+📫 *Feel free to connect or give feedback!*
+
+
