@@ -1,5 +1,6 @@
 // src/components/Card.jsx
-import React, { useState } from "react";
+import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
@@ -14,7 +15,6 @@ const Card = ({ blog, onDeleteClick }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [loadingQuality, setLoadingQuality] = useState(false);
   const [qualityData, setQualityData] = useState(null);
-  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleDelete = async () => {
     console.log("inside deleteblog", blog._id);
@@ -114,7 +114,7 @@ const Card = ({ blog, onDeleteClick }) => {
 
                 {loadingQuality ? (
                   <div className="skeleton">
-                    <div className="skeleton-line" />
+                    <div className="skeleton-line top-skeleton" />
                     <div className="skeleton-line" />
                     <div className="skeleton-line" />
                     <div className="skeleton-line short" />
@@ -128,13 +128,10 @@ const Card = ({ blog, onDeleteClick }) => {
                       </span>
                     </h3>
 
-                    {/* 👇 Suggestions toggle button */}
-                    <button
-                      className="suggestions-btn"
-                      onClick={() => setShowSuggestions(true)}
-                    >
-                      Show Suggestions
-                    </button>
+                    <p className="suggestions-note">
+                      Click on <strong>Read Blog</strong> to see suggestions to
+                      improve blog quality.
+                    </p>
                   </div>
                 )}
               </div>

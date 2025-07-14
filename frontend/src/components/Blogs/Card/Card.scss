@@ -165,7 +165,7 @@
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   min-height: 130px;
-  padding: 1.2rem;
+  padding: 0.7rem;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   z-index: 9999;
   animation: fadeInSkeleton 0.3s ease-in-out;
@@ -190,7 +190,6 @@
   font-size: 1rem;
   font-weight: 600;
   color: #333;
-  margin-bottom: 1rem;
 }
 
 .quality-score {
@@ -199,23 +198,6 @@
   color: #00796b;
   font-weight: 700;
   font-size: 1.1rem;
-}
-
-.suggestions-btn {
-  margin-top: 0.75rem;
-  padding: 0.45rem 1.1rem;
-  font-size: 0.9rem;
-  background-color: #e0f7fa;
-  border: 1px solid #26a69a;
-  color: #00796b;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.suggestions-btn:hover {
-  background-color: #26a69a;
-  color: #fff;
 }
 
 .close-tooltip {
@@ -231,6 +213,15 @@
 
 .close-tooltip:hover {
   color: #333;
+}
+.suggestions-note {
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  color: #555;
+  background: #f5f8fa;
+  border-left: 4px solid #3498db;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
 }
 
 @keyframes fadeInSkeleton {
@@ -265,6 +256,10 @@
   background: linear-gradient(90deg, #eee, #ddd, #eee);
   border-radius: 6px;
   animation: shimmer 1.5s infinite;
+}
+
+.top-skeleton {
+  margin-top: 0.75rem;
 }
 
 .skeleton-line.short {
