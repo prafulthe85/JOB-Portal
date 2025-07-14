@@ -65,7 +65,7 @@ const Card = ({ blog, onDeleteClick }) => {
   };
 
   return (
-    <div className="card">
+    <div className="blog-card">
       <div className="card__left">
         <h2 className="card__title">{blog.title}</h2>
         <p className="card__description">

@@ -1,4 +1,4 @@
-.card {
+.blog-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,7 +18,7 @@
   overflow: visible;
 }
 
-.card:hover {
+.blog-card:hover {
   transform: scale(1.02);
   box-shadow: 0 16px 24px rgba(0, 0, 0, 0.15);
   border-color: transparent;
@@ -100,7 +100,7 @@
   z-index: 0;
 }
 
-.card:hover .card__image img {
+.blog-card:hover .card__image img {
   transform: scale(1.3);
 }
 
