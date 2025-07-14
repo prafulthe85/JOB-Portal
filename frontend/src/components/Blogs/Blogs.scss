@@ -1,14 +1,20 @@
 /* Blogs.css */
 
 .blogs-page {
-  padding: 2rem;
+  background: whitesmoke;
+
+  padding-top: 2rem;
   //   padding-top: 100px;
   font-family: Arial, sans-serif;
 }
 
 .blog_container {
-  max-width: 1000px;
-  margin: 0 auto;
+  // max-width: 1000px;
+  // margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .header {
@@ -16,6 +22,9 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+
+  width: 100%;
+  max-width: 1000px;
 }
 
 .header h1 {
@@ -34,12 +43,30 @@
 .post-button:hover {
   background-color: #24463a;
 }
-
 .blogs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: block; /* Each blog will take its own row */
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
 }
+.blog-carddd {
+  overflow: visible;
+  // height: 200px;
+  // width: 100%;
+  // margin-bottom: 1.5rem;
+  // border: 1px solid #ccc;
+  // border-radius: 10px;
+  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  // overflow: hidden;
+  // background-color: white;
+  // padding: 1rem;
+  // box-sizing: border-box;
+}
+
+// .cell {
+//   flex: 0 1 calc(33.333% - 1rem); // 3 cards per row (subtracting a bit for spacing)
+//   box-sizing: border-box;
+// }
 
 .blog-card {
   padding: 1rem;
@@ -151,6 +178,9 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
+
+  width: 100%;
+  max-width: 1000px;
 }
 
 .filters input,
@@ -158,6 +188,46 @@
 .filters button {
   padding: 0.5rem;
   font-size: 1rem;
+}
+
+.pagination {
+  width: 100%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 1rem;
+}
+
+.pagination-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #70a9a1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.pagination-btn:hover {
+  background-color: #5b8e89;
+  transform: translateY(-2px);
+}
+
+.pagination-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagination-info {
+  font-size: 1rem;
+  color: #444;
 }
 
 @media (max-width: 1130px) {

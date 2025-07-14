@@ -230,7 +230,7 @@ const PostJob = () => {
       }
     } catch (err) {
       console.error("Error generating job:", err);
-      alert("Failed to generate job details. Please try again.");
+      toast.err("Failed to generate job details. Please try again.");
     } finally {
       setIsLoading(false); // Hide loader
     }

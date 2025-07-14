@@ -13,11 +13,12 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-.blogs-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
+// .blogs-list {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+//   gap: 20px;
+//   margin-bottom: 1rem;
+// }
 
 .blog-details-container {
   max-width: 800px;

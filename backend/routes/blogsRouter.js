@@ -2,8 +2,9 @@ import express from "express";
 import {
   getAllBlogs,
   postBlog,
-  // deleteBlog,
+  deleteBlog,
   getDetailBlog,
+  checkBlogQuality,
 } from "../controllers/blogsController.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 import { uploadImage } from "../middlewares/multer.js";
@@ -17,7 +18,8 @@ router.post(
   uploadImage.single("image"),
   postBlog
 );
-// router.post("/deleteblog/:id", deleteBlog);
+router.delete("/deleteblog/:id", isAuthenticated, deleteBlog);
 router.get("/:id", isAuthenticated, getDetailBlog);
+router.post("/check-blog-quality", isAuthenticated, checkBlogQuality);
 
 export default router;

@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import Loader from "../Loader";
+import ConfirmModal from "../Modal/ConfirmModal";
 import "./Blogs.scss";
+import Card from "./Card/Card";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -17,10 +19,14 @@ const Blogs = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTitle, setSearchTitle] = useState("");
   const [searchTitleInput, setSearchTitleInput] = useState("");
+  const [deleteBlogId, setDeleteBlogId] = useState(null);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+
   // const [searchTitle, setSearchTitle] = useState(""); // actual filter trigger
 
   const [formData, setFormData] = useState({
     title: "",
+    description: "",
     category: "",
     name: "",
     email: "",
@@ -51,35 +57,34 @@ const Blogs = () => {
     setPage(1); // Reset page whenever filters change
   }, [showOnlyMine, selectedCategory, searchTitle]);
 
+  const fetchBlogs = async () => {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page,
+        limit: 5,
+        ...(selectedCategory && { category: selectedCategory }),
+        ...(searchTitle && { title: searchTitle }),
+        ...(showOnlyMine && { showOnlyMine: "true" }),
+      });
+      const res = await axios.get(
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }/api/v1/blogs/getallblogs?${params.toString()}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setBlogs(res.data.blogs);
+      setTotalPages(res.data.pages);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error while fetching blogs");
+    } finally {
+      setIsLoading(false); // ✅ Fix added
+    }
+  };
   useEffect(() => {
-    const fetchBlogs = async () => {
-      setIsLoading(true);
-      try {
-        const params = new URLSearchParams({
-          page,
-          limit: 5,
-          ...(selectedCategory && { category: selectedCategory }),
-          ...(searchTitle && { title: searchTitle }),
-          ...(showOnlyMine && { showOnlyMine: "true" }),
-        });
-        const res = await axios.get(
-          `${
-            import.meta.env.VITE_SERVER_URL
-          }/api/v1/blogs/getallblogs?${params.toString()}`,
-          {
-            withCredentials: true,
-          }
-        );
-        setBlogs(res.data.blogs);
-        setTotalPages(res.data.pages);
-      } catch (error) {
-        console.log(error);
-        toast.error("Error while fetching blogs");
-      } finally {
-        setIsLoading(false); // ✅ Fix added
-      }
-    };
-
     fetchBlogs();
   }, [page, selectedCategory, searchTitle, showOnlyMine]);
 
@@ -113,16 +118,24 @@ const Blogs = () => {
   const handlePostBlog = async () => {
     if (
       !formData.title ||
+      !formData.description ||
       !formData.category ||
       !formData.name ||
       !formData.email ||
-      !formData.content ||
-      !formData.image
+      !formData.content
+      // !formData.image
     ) {
       return toast.error("Please fill in all fields including the image");
     }
     if (formData.content.length < 50) {
+      console.log("formData.content.length: ", formData.content.length);
       return toast.error("Blog content must be at least 50 characters long");
+    }
+    if (formData.description.length > 200) {
+      console.log("formData.description.length: ", formData.description.length);
+      return toast.error(
+        "Blog description must be at most 200 characters long"
+      );
     }
 
     const data = new FormData();
@@ -141,6 +154,7 @@ const Blogs = () => {
       );
       setFormData({
         title: "",
+        description: "",
         category: "",
         name: "",
         email: "",
@@ -150,6 +164,7 @@ const Blogs = () => {
 
       setShowPopup(false);
       toast.success("Blog posted successfully!");
+      fetchBlogs();
       setIsLoading(true);
       // Refresh blogs after posting
       setSearchTitle("");
@@ -186,6 +201,7 @@ const Blogs = () => {
       setShowPopup(false);
       setFormData({
         title: "",
+        description: "",
         category: "",
         name: "",
         email: "",
@@ -193,6 +209,29 @@ const Blogs = () => {
         content: "",
       });
     }, 300); // match the transition duration
+  };
+
+  const handleDeleteClick = (blog) => {
+    setDeleteBlogId(blog._id);
+    setShowConfirmDelete(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      const res = await axios.delete(
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }/api/v1/blogs/deleteblog/${deleteBlogId}`,
+        { withCredentials: true }
+      );
+      toast.success(res.data.message);
+      setShowConfirmDelete(false);
+      setDeleteBlogId(null);
+      fetchBlogs(); // refresh list
+    } catch (error) {
+      console.log("error in deleteblog", error);
+      toast.error(error.response?.data?.message || "Failed to delete blog");
+    }
   };
 
   const BlogQuality = (blog) => {
@@ -232,40 +271,31 @@ const Blogs = () => {
         </div>
 
         <div className="blogs-list">
-          {blogs.map((blog) => (
-            <motion.div
-              key={blog._id}
-              className="blog-card stylish-card"
-              onClick={() => navigate(`/blogs/${blog._id}`)}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ scale: 1.03 }}
-            >
-              <h2>{blog.title}</h2>
-              <p className="date">
-                {new Date(blog.createdAt).toLocaleDateString()}
-              </p>
-            </motion.div>
+          {blogs.map((blog, index) => (
+            <div className="blog-carddd" key={index}>
+              <Card blog={blog} onDeleteClick={handleDeleteClick} />
+            </div>
           ))}
         </div>
         <div className="pagination">
           <button
+            className="pagination-btn"
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={page === 1}
           >
-            Previous
+            ← Previous
           </button>
 
-          <span>
-            Page {page} of {totalPages}
+          <span className="pagination-info">
+            Page <strong>{page}</strong> of <strong>{totalPages}</strong>
           </span>
 
           <button
+            className="pagination-btn"
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={page === totalPages}
           >
-            Next
+            Next →
           </button>
         </div>
 
@@ -279,6 +309,14 @@ const Blogs = () => {
                 placeholder="Your blog's title"
                 name="title"
                 value={formData.title}
+                onChange={handleInputChange}
+              />
+              <input
+                type="text"
+                required
+                placeholder="Your blog's Description"
+                name="description"
+                value={formData.descrition}
                 onChange={handleInputChange}
               />
               <select
@@ -320,6 +358,17 @@ const Blogs = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {showConfirmDelete && (
+          <ConfirmModal
+            message="Do you want to delete this JOB?"
+            onConfirm={handleDeleteConfirm}
+            onCancel={() => {
+              setShowConfirmDelete(false);
+              setDeleteBlogId(null);
+            }}
+          />
         )}
       </div>
     </section>

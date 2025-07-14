@@ -8,6 +8,11 @@ const blogsSchema = new mongoose.Schema(
       required: [true, "Blog title is required!"],
       minLength: [5, "Title must be at least 5 characters long"],
     },
+    description: {
+      type: String,
+      required: [true, "Blog description is required!"],
+      minLength: [5, "description must be at least 5 characters long"],
+    },
 
     category: {
       type: String,
