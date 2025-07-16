@@ -13,10 +13,18 @@ import { logger } from "../backend/utils/logger.js";
 const app = express();
 config({ path: "./config/config.env" });
 
+console.log("🚀 Starting server with ENV variables:");
+console.log("🔹 NODE_ENV:", process.env.NODE_ENV);
+console.log("🔹 FRONTEND_URL:", process.env.FRONTEND_URL);
+console.log(
+  "🔹 CORS Origin Used:",
+  process.env.FRONTEND_URL || "https://jobportalx.netlify.app"
+);
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
-    method: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
+    origin: process.env.FRONTEND_URL || "https://jobportalx.netlify.app",
+    methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
     credentials: true,
   })
 );

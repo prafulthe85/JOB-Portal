@@ -9,6 +9,10 @@ export const sendToken = (user, statusCode, res, message) => {
     secure: isProduction,
     sameSite: isProduction ? "None" : "Lax",
   };
+  console.log("🔐 Sending Auth Token Cookie:");
+  console.log("👉 isProduction:", isProduction);
+  console.log("👉 cookie expires at:", options.expires.toISOString());
+  console.log("👉 token length:", token.length); // Don't log full token in production
 
   res.status(statusCode).cookie("token", token, options).json({
     success: true,
