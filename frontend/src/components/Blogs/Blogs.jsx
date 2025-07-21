@@ -362,7 +362,7 @@ const Blogs = () => {
 
         {showConfirmDelete && (
           <ConfirmModal
-            message="Do you want to delete this JOB?"
+            message="Do you want to delete this Blog?"
             onConfirm={handleDeleteConfirm}
             onCancel={() => {
               setShowConfirmDelete(false);
