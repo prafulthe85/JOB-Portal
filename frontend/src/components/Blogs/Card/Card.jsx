@@ -100,7 +100,7 @@ const Card = ({ blog, onDeleteClick }) => {
 
           <div className="quality-chip-outer">
             <button className="quality-chip" onClick={handleQuality}>
-              Check Blog Quality
+              Get Content Score
             </button>
 
             {showTooltip && (
