@@ -1892,6 +1892,7 @@ nav .container .logo img {
 nav .menu {
   display: flex;
   gap: 30px;
+  height: 60px;
   align-items: center;
 }
 nav .menu button {
