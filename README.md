@@ -1,13 +1,36 @@
-# Job Portal App with MERN Stack
+# 🧠 AI-Powered Job Portal (MERN Stack + LLM Integration)
 
-A comprehensive job portal application built using the MERN (MongoDB, Express.js, React.js, Node.js) stack. This application allows users to browse job listings, apply for jobs, and manage their applications seamlessly.
+A full-featured job portal built with the **MERN stack** (**MongoDB, Express.js, React.js, Node.js**), enhanced with **AI capabilities** and **LLM integration** for an intelligent, seamless user experience.
 
-## Features
+This platform enables users to browse and apply for jobs, manage their applications, and generate job listings using AI prompts. It also includes blog quality analysis powered by LLMs.
 
-- **User Authentication:** Secure authentication using JWT (JSON Web Tokens) for both job seekers and employers.
-- **Job Listings:** Browse through a wide range of job listings fetched from MongoDB.
-- **Application Management:** Job seekers can manage their job applications, and employers can view and manage received applications.
-- **Responsive Design:** Ensures a seamless experience across all devices.
+---
+
+## 🚀 Features
+
+- 🔐 **User Authentication**  
+  Secure login/register with **JWT-based authentication** for both job seekers and employers.
+
+- 💼 **Job Listings & Application Management**  
+  - Users can browse dynamic job listings stored in MongoDB.  
+  - Employers can post jobs and manage applications.  
+  - Candidates can apply and track their application status.
+
+- 🧠 **AI & LLM Integration**  
+  - Integrated **LLM API** to **generate job descriptions** from user prompts.  
+  - **Blog Quality Score**: AI evaluates blog content and suggests improvements.
+
+- 🛠️ **State Management with Redux Toolkit**  
+  Efficient and scalable global state management using Redux for authentication, job data, and UI feedback.
+
+- 📷 **Image Upload Support**  
+  Blog creation supports image uploads via `FormData`, with proper validation and previews.
+
+- 📊 **Smart Filtering & Pagination**  
+  Combine filters like **Category**, **Title**, and **Your Blogs**, with **pagination** for optimized UX.
+
+- 📱 **Responsive UI**  
+  Clean, modern, and mobile-friendly interface built with React and Tailwind CSS.
 
 ## Technologies Used
 
