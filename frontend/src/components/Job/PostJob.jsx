@@ -17,6 +17,7 @@ const PostJob = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const { isAuthorized, user } = useContext(Context);
+  const navigateTo = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -58,6 +59,7 @@ const PostJob = () => {
           setSalary("");
           setAiPrompt("");
         }
+        navigateTo("/job/me");
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -148,7 +150,6 @@ const PostJob = () => {
     }
   };
 
-  const navigateTo = useNavigate();
   if (!isAuthorized || (user && user.role !== "Employer")) {
     navigateTo("/");
   }
