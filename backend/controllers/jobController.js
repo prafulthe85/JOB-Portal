@@ -1,7 +1,7 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncError.js";
 import { Job } from "../models/jobSchema.js";
 import ErrorHandler from "../middlewares/error.js";
-import axios from "axios";
+import { getAIQualityFeedback } from "../utils/openRouter.js";
 
 export const getAllJobs = catchAsyncErrors(async (req, res, next) => {
   const jobs = await Job.find({ expired: false });
@@ -47,7 +47,6 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Job Posted Successfully!",
-    job,
   });
 });
 
@@ -58,7 +57,9 @@ export const getMyJobs = catchAsyncErrors(async (req, res, next) => {
       new ErrorHandler("Job Seeker not allowed to access this resource.", 400)
     );
   }
-  const myJobs = await Job.find({ postedBy: req.user._id });
+  const myJobs = await Job.find({ postedBy: req.user._id }).sort({
+    jobPostedOn: -1,
+  });
   res.status(200).json({
     success: true,
     myJobs,
@@ -137,14 +138,7 @@ export const generateAIJobDetails = catchAsyncErrors(async (req, res, next) => {
   }
 
   try {
-    const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "mistralai/mistral-7b-instruct",
-        messages: [
-          {
-            role: "user",
-            content: `You are an intelligent job data generator.
+    const prompt = `You are an intelligent job data generator.
 
                 Given a free-form text that describes a job, generate a structured JSON object with the following fields:
 
@@ -154,7 +148,7 @@ export const generateAIJobDetails = catchAsyncErrors(async (req, res, next) => {
                   "country": "Country name",
                   "city": "City name",
                   "location": "Full location (City + Country)",
-                  "salary": "Salary range or amount",
+        "salary": "Salary amount(should be a nubmer)",
                   "description": {
                     "requirement": "Write 2-3 sentences describing the top requirements of the job. Use a natural tone, not bullet points.",
                     "experience": "Write the experience needed for this role in a short sentence.",
@@ -167,6 +161,7 @@ export const generateAIJobDetails = catchAsyncErrors(async (req, res, next) => {
                 - Output must be ONLY in JSON format.
                 - If any detail is missing in the input, make a reasonable assumption based on the job context.
                 - Do not include explanations or text outside the JSON.
+      - **For "salary", pick a number only, if nothing is passed assume a market average.**
                 - **For "category", if possible, pick a value from the following list**:
                   - Graphics & Design
                   - Mobile App Development
@@ -178,27 +173,36 @@ export const generateAIJobDetails = catchAsyncErrors(async (req, res, next) => {
                   - Software Engineer
                   - DevOps Engineer
 
-                Now based on this job description: ${aiPrompt}`,
-          },
-        ],
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.VITE_OPEN_ROUTER_KEY}`,
-        },
-      }
-    );
+      Now based on this job description: ${aiPrompt}`;
 
-    const reply = response.data?.choices?.[0]?.message?.content;
+    const llmResponse = await getAIQualityFeedback(prompt);
 
-    if (!reply) {
-      return res.status(500).json({ message: "No response from AI" });
+
+    if (llmResponse.status !== 200) {
+      return res
+        .status(500)
+        .json({ success: false, message: llmResponse.message });
     }
 
-    return res.status(200).json({ content: reply });
+    const dataFromLlm = llmResponse.parsed || {};
+
+    if (dataFromLlm.category && dataFromLlm.description) {
+      return res.status(200).json({
+        success: true,
+        title: dataFromLlm.title,
+        category: dataFromLlm.category,
+        country: dataFromLlm.country,
+        city: dataFromLlm.city,
+        location: dataFromLlm.location,
+        salary: dataFromLlm.salary,
+        description: dataFromLlm.description,
+      });
+    }
   } catch (error) {
     console.error("OpenRouter error:", error.message);
-    return res.status(500).json({ message: "AI generation failed" });
+    return res.status(500).json({
+      success: false,
+      message: "AI generation failed",
+    });
   }
 });

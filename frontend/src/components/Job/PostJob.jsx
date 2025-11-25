@@ -19,10 +19,9 @@ const PostJob = () => {
   const { isAuthorized, user } = useContext(Context);
 
   useEffect(() => {
-    // Simulate an API call or any async operation
     setTimeout(() => {
-      setIsLoading(false); // Set loading to false once the data has been fetched
-    }, 500); // Adjust the timeout as needed
+      setIsLoading(false);
+    }, 500);
   }, []);
   const handleJobPost = async (e) => {
     setIsLoading(true);
@@ -84,26 +83,6 @@ const PostJob = () => {
     }
   };
 
-  const parseSalary = (salaryInput) => {
-    if (!salaryInput) return "invalid salary";
-
-    // If it's already a number
-    if (typeof salaryInput === "number") {
-      return Number.isFinite(salaryInput) ? salaryInput : "invalid salary";
-    }
-
-    if (typeof salaryInput === "string") {
-      // Match first number-like pattern (like "10,00,000")
-      const match = salaryInput.match(/\d[\d,]*/);
-      if (match && match[0]) {
-        const number = parseInt(match[0].replace(/,/g, ""), 10);
-        return isNaN(number) ? "invalid salary" : number;
-      }
-    }
-
-    return "invalid salary";
-  };
-
   const handleGenerateJob = async () => {
     setIsLoading(true);
 
@@ -118,75 +97,11 @@ const PostJob = () => {
         }
       );
 
-      const reply = res.data?.content;
-
-      if (!reply) throw new Error("No reply from backend");
-
-      // const jobDetails = extractJobDetailsNew(reply);
-
-      // try {
-      //   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${import.meta.env.VITE_OPEN_ROUTER_KEY}`, // replace with your key
-      //     },
-      //     body: JSON.stringify({
-      //       model: "mistralai/mistral-7b-instruct",
-      //       messages: [
-      //         {
-      //           role: "user",
-      //           content: `You are an intelligent job data generator.
-
-      //             Given a free-form text that describes a job, generate a structured JSON object with the following fields:
-
-      //             {
-      //               "title": "Job title",
-      //               "category": "Job category ",
-      //               "country": "Country name",
-      //               "city": "City name",
-      //               "location": "Full location (City + Country)",
-      //               "salary": "Salary range or amount",
-      //               "description": {
-      //                 "requirement": "Write 2-3 sentences describing the top requirements of the job. Use a natural tone, not bullet points.",
-      //                 "experience": "Write the experience needed for this role in a short sentence.",
-      //                 "skills": "Write 3-4 sentences explaining the important skills needed for the job. Mention technologies, tools, and soft skills.",
-      //                 "responsibility": "Write 3-4 sentences detailing the key responsibilities in this role. Describe daily tasks and what the person will be expected to deliver."
-      //               }
-      //             }
-
-      //             Rules:
-      //             - Output must be ONLY in JSON format.
-      //             - If any detail is missing in the input, make a reasonable assumption based on the job context.
-      //             - Do not include explanations or text outside the JSON.
-      //             - **For "category", if possible, pick a value from the following list**:
-      //               - Graphics & Design
-      //               - Mobile App Development
-      //               - Frontend Web Development
-      //               - Backend Web Development
-      //               - Account & Finance
-      //               - Artificial Intelligence
-      //               - Video Animation
-      //               - Software Engineer
-      //               - DevOps Engineer
-
-      //             Now based on this job description: ${aiPrompt}`,
-      //         },
-      //       ],
-      //     }),
-      //   });
-
-      //   const data = await res.json();
-      //   // console.log("🧠 AI Raw Response DATA:\n", data);
-      //   const reply = data.choices?.[0]?.message?.content;
-
-      //   if (!reply) throw new Error("No response from model");
-
-      //   console.log("🧠 AI Raw Response:\n", reply);
-
-      // const jobDetails = extractJobDetails(reply);
-      const jobDetails = extractJobDetailsNew(reply);
-      console.log("jobDetails", jobDetails);
+      if (!res.data?.success) {
+        toast.error(res.data?.message || "Failed to generate job details.");
+        return;
+      }
+      const job = res.data;
 
       const allowedCategories = [
         "Graphics & Design",
@@ -202,32 +117,29 @@ const PostJob = () => {
         "Other",
       ];
 
-      if (jobDetails) {
-        setTitle(jobDetails.title || "");
-        setCountry(jobDetails.country || "");
-        setCity(jobDetails.city || "");
-        setLocation(jobDetails.location || "");
-        const salaryValue = parseSalary(jobDetails.salary);
-        setSalary(salaryValue);
-        const incomingCategory = jobDetails.category || "";
+      setTitle(job.title || "");
+      setCountry(job.country || "");
+      setCity(job.city || "");
+      setLocation(job.location || "");
+      setSalary(job.salary || "");
+      const incomingCategory = job.category || "";
 
-        const categoryToSet = allowedCategories.includes(incomingCategory)
-          ? incomingCategory
-          : "Other";
+      const categoryToSet = allowedCategories.includes(incomingCategory)
+        ? incomingCategory
+        : "Other";
 
-        setCategory(categoryToSet);
+      setCategory(categoryToSet);
 
-        if (jobDetails.description) {
-          const { requirement, experience, skills, responsibility } =
-            jobDetails.description;
+      if (job.description) {
+        const { requirement, experience, skills, responsibility } =
+          job.description;
 
-          const formattedDescription = `Job Description:\n\n\nRequirement: ${requirement}\n\nExperience: ${experience}\n\nSkills: ${skills}\n\nResponsibility: ${responsibility}`;
+        const formattedDescription = `Job Description:\n\n\nRequirement: ${requirement}\n\nExperience: ${experience}\n\nSkills: ${skills}\n\nResponsibility: ${responsibility}`;
 
-          setDescription(formattedDescription);
-        }
-
-        console.log("🎯 Fields set from AI response:", jobDetails);
+        setDescription(formattedDescription);
       }
+
+      console.log("🎯 Fields set from AI response:", job);
     } catch (err) {
       console.error("Error generating job:", err);
       toast.err("Failed to generate job details. Please try again.");

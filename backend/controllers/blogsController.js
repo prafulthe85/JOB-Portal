@@ -1,15 +1,7 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncError.js";
 import { Blogs } from "../models/blogsSchema.js";
 import ErrorHandler from "../middlewares/error.js";
-import axios from "axios";
-
-// export const getAllBlogs = catchAsyncErrors(async (req, res, next) => {
-//   const blogs = await Blogs.find();
-//   res.status(200).json({
-//     success: true,
-//     blogs,
-//   });
-// });
+import { getAIQualityFeedback } from "../utils/openRouter.js";
 
 export const getAllBlogs = async (req, res, next) => {
   try {
@@ -37,7 +29,7 @@ export const getAllBlogs = async (req, res, next) => {
 
     const total = await Blogs.countDocuments(query);
     const blogs = await Blogs.find(query)
-      .populate("postedBy", "name email") // assumes postedBy refers to User
+      .populate("postedBy", "name email")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -53,7 +45,7 @@ export const getAllBlogs = async (req, res, next) => {
         name: blog.name,
         email: blog.email,
         createdAt: blog.createdAt,
-        isAuthor, // 👈 flag added
+        isAuthor,
       };
     });
 
@@ -80,10 +72,6 @@ export const postBlog = async (req, res, next) => {
     if (!title || !description || !category || !content || !name || !email) {
       return next(new ErrorHandler("All fields are required", 400));
     }
-
-    // if (!req.file) {
-    //   return next(new ErrorHandler("Image is required!", 400));
-    // }
 
     const blog = await Blogs.create({
       title,
@@ -127,52 +115,6 @@ export const deleteBlog = catchAsyncErrors(async (req, res, next) => {
     message: "Blog Deleted!",
   });
 });
-
-// export const evaluateBlog = async (req, res) => {
-//   const { title, content } = req.body;
-
-//   try {
-//     const response = await axios.post(
-//       "https://openrouter.ai/api/v1/chat/completions",
-//       {
-//         model: "openai/gpt-4o", // or any other model
-//         messages: [
-//           {
-//             role: "system",
-//             content:
-//               "You are a blog evaluator. Score the blog from 0 to 100 based on quality, relevance, grammar, and clarity. Respond in JSON: { score: number, feedback: string }",
-//           },
-//           {
-//             role: "user",
-//             content: `Title: ${title}\n\nContent: ${content}`,
-//           },
-//         ],
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-//           "Content-Type": "application/json",
-//           "HTTP-Referer": "https://yourdomain.com", // optional, but some APIs require it
-//         },
-//       }
-//     );
-
-//     const reply = response.data.choices[0].message.content;
-//     const parsed = JSON.parse(reply);
-
-//     res.status(200).json({
-//       success: true,
-//       score: parsed.score,
-//       feedback: parsed.feedback,
-//     });
-//   } catch (error) {
-//     console.error("Error evaluating blog:", error.message);
-//     res.status(500).json({
-//       success: false,
-//       message: "Failed to evaluate blog",
-//     });
-//   }
-// };
 
 export const getDetailBlog = async (req, res) => {
   try {
@@ -248,26 +190,6 @@ export const checkBlogQuality = async (req, res) => {
 
     const { title, description, content, category } = blog;
 
-    // const prompt = `
-    //   You are an expert content quality analyst. Review the following blog post and provide a quality score (0-100) and 2-3 actionable improvement suggestions:
-
-    //   Title: ${title}
-    //   Description: ${description}
-    //   Category: ${category}
-    //   Content: ${content}
-
-    //   Rules:
-    //   - generate a structured JSON object with the following fields:
-    //     {
-    //       "score": number,
-    //       "suggestions": [
-    //         "Suggestion 1",
-    //         "Suggestion 2",
-    //         "Suggestion 3"
-    //       ]
-    //     }
-    // `;
-
     const prompt = `
       You are an expert and strict content quality analyst.
 
@@ -296,41 +218,26 @@ export const checkBlogQuality = async (req, res) => {
       }
     `;
 
-    // 3. Call LLM API (dummy here)
     const llmResponse = await getAIQualityFeedback(prompt);
 
-    if (llmResponse.status === 200) {
-      const rawContent = llmResponse.content;
-      console.log("✅ LLM response:", llmResponse);
-
-      const fixedJson = rawContent
-        .replace(/^```json/, "") // remove markdown json wrapper
-        .replace(/```$/, "") // remove trailing ```
-        .replace(/\\n/g, "") // remove escaped newlines
-        .replace(/\\"/g, '"') // fix escaped quotes
-        .replace(/“|”/g, '"'); // fix smart quotes
-
-      let parsed;
-      try {
-        parsed = JSON.parse(fixedJson);
-      } catch (err) {
-        console.error("❌ JSON Parse Failed:", err.message);
-        console.error("🔍 Raw JSON that failed:", fixedJson);
+    if (llmResponse.status !== 200) {
         return res
           .status(500)
-          .json({ message: "Failed to parse LLM response" });
+        .json({ success: false, message: llmResponse.message });
       }
 
+    const dataFromLlm = llmResponse.parsed || {};
+    if (dataFromLlm.score && dataFromLlm.suggestions) {
       return res.status(200).json({
         success: true,
-        score: parsed.score,
-        suggestions: parsed.suggestions,
+        score: dataFromLlm.score,
+        suggestions: dataFromLlm.suggestions,
       });
     } else {
-      console.error("❌ LLM response error:", llmResponse);
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error",
+      return res.status(200).json({
+        success: true,
+        score: 0,
+        suggestions: [],
       });
     }
   } catch (error) {
@@ -340,60 +247,4 @@ export const checkBlogQuality = async (req, res) => {
       message: "Internal server error",
     });
   }
-};
-
-const getAIQualityFeedback = async (prompt) => {
-  // Replace this with actual LLM API call
-  try {
-    const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "mistralai/mistral-7b-instruct",
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.VITE_OPEN_ROUTER_KEY}`,
-        },
-      }
-    );
-
-    if (response.status === 200) {
-      const reply = response.data?.choices?.[0]?.message?.content;
-      console.log("✅ AI reply:", reply);
-      return {
-        content: reply,
-        status: 200,
-        message: "AI successfully generated quality feedback",
-      };
-    } else {
-      console.error("❌ AI responded with non-200 status:", response.status);
-
-      return {
-        content: "",
-        status: 500,
-        message: "Failed to get quality feedback from AI",
-        score: 0,
-        suggestions: [],
-      };
-    }
-  } catch (error) {
-    console.error("OpenRouter error:", error.message);
-    return {
-      message: "AI generation failed",
-      status: 500,
-      score: 0,
-      suggestions: [],
-    };
-  }
-
-  // if (!reply) {
-  //   return res.status(500).json({ message: "No response from AI" });
-  // }
 };
