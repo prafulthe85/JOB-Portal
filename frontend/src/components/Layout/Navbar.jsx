@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Context } from "../../main";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -35,40 +35,64 @@ const Navbar = () => {
         </div>
         <ul className={!show ? "menu" : "show-menu menu"}>
           <li>
-            <Link to={"/"} onClick={() => setShow(false)}>
+            <NavLink
+              to={"/"}
+              onClick={() => setShow(false)}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
               HOME
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to={"/job/getall"} onClick={() => setShow(false)}>
+            <NavLink
+              to={"/job/getall"}
+              onClick={() => setShow(false)}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
               ALL JOBS
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to={"/applications/me"} onClick={() => setShow(false)}>
+            <NavLink
+              to={"/applications/me"}
+              onClick={() => setShow(false)}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
               {user && user.role === "Employer"
                 ? "APPLICANT'S APPLICATIONS"
                 : "MY APPLICATIONS"}
-            </Link>
+            </NavLink>
           </li>
           {user && user.role === "Employer" ? (
             <>
               <li>
-                <Link to={"/job/post"} onClick={() => setShow(false)}>
+                <NavLink
+                  to={"/job/post"}
+                  onClick={() => setShow(false)}
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
                   POST NEW JOB
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to={"/job/me"} onClick={() => setShow(false)}>
+                <NavLink
+                  to={"/job/me"}
+                  onClick={() => setShow(false)}
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
                   VIEW YOUR JOBS
-                </Link>
+                </NavLink>
               </li>
             </>
           ) : null}
           <li>
-            <Link to={"/blogs"} onClick={() => setShow(false)}>
+            <NavLink
+              to={"/blogs"}
+              onClick={() => setShow(false)}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
               BLOGS
-            </Link>
+            </NavLink>
           </li>
 
           <button onClick={handleLogout}>LOGOUT</button>

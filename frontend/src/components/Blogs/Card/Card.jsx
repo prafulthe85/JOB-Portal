@@ -66,6 +66,9 @@ const Card = ({ blog, onDeleteClick }) => {
 
   return (
     <div className="blog-card">
+      <div className="card__image">
+        <img src={imageUrl} alt={blog.title} className="card-img" />
+      </div>
       <div className="card__left">
         <h2 className="card__title">{blog.title}</h2>
         <p className="card__description">
@@ -138,10 +141,6 @@ const Card = ({ blog, onDeleteClick }) => {
             )}
           </div>
         </div>
-      </div>
-
-      <div className="card__image">
-        <img src={imageUrl} alt={blog.title} className="card-img" />
       </div>
     </div>
   );

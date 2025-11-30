@@ -4,13 +4,10 @@
   background: whitesmoke;
 
   padding-top: 2rem;
-  //   padding-top: 100px;
   font-family: Arial, sans-serif;
 }
 
 .blog_container {
-  // max-width: 1000px;
-  // margin: 0 auto;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -47,24 +44,9 @@
   margin-bottom: 2rem;
   box-sizing: border-box;
 }
-.blog-carddd {
+.blog-card-parent {
   overflow: visible;
-  // height: 200px;
-  // width: 100%;
-  // margin-bottom: 1.5rem;
-  // border: 1px solid #ccc;
-  // border-radius: 10px;
-  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  // overflow: hidden;
-  // background-color: white;
-  // padding: 1rem;
-  // box-sizing: border-box;
 }
-
-// .cell {
-//   flex: 0 1 calc(33.333% - 1rem); // 3 cards per row (subtracting a bit for spacing)
-//   box-sizing: border-box;
-// }
 
 .blog-card {
   padding: 1rem;
@@ -74,91 +56,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Modal styles */
-
-/* ------------------------- POST BLOG POPUP ------------------------- */
-// .modal-backdrop {
-//   position: fixed;
-//   inset: 0;
-//   background: rgba(0, 0, 0, 0.4);
-//   backdrop-filter: blur(4px);
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   opacity: 0;
-//   pointer-events: none;
-//   transition: opacity 0.3s ease;
-//   z-index: 999;
-// }
-
-// .modal-backdrop.show {
-//   opacity: 1;
-//   pointer-events: all;
-// }
-
-// .modal-content_blog {
-//   background: white;
-//   padding: 30px;
-//   width: 90%;
-
-//   position: relative;
-//   top: 3%;
-//   max-width: 900px;
-//   border-radius: 10px;
-//   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-//   transform: translateY(-30px);
-//   transition: transform 0.3s ease;
-// }
-
-// .modal-backdrop.show .modal-content_blog {
-//   transform: translateY(0);
-// }
-// .modal-content_blog h2 {
-//   margin-bottom: 1rem;
-// }
-
-// .modal-content_blog input,
-// .modal-content_blog select,
-// .modal-content_blog textarea {
-//   width: 100%;
-//   margin-bottom: 1rem;
-//   padding: 0.75rem;
-//   font-size: 1rem;
-//   border: 1px solid #ccc;
-//   border-radius: 6px;
-// }
-
-// .modal-actions {
-//   display: flex;
-//   justify-content: flex-end;
-//   gap: 1rem;
-// }
-
-// .modal-actions button {
-//   padding: 0.5rem 1rem;
-//   border: none;
-//   border-radius: 6px;
-//   cursor: pointer;
-//   font-weight: 500;
-// }
-
-// .modal-actions button:first-child {
-//   background-color: #2d5649;
-//   color: white;
-// }
-
-// .modal-actions button:last-child {
-//   background-color: #ccc;
-//   color: black;
-// }
-
-// .modal-actions button:first-child:hover {
-//   background-color: #24463a;
-// }
-
-// .modal-actions button:last-child:hover {
-//   background-color: #aaa;
-// }
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -170,7 +67,7 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
-  z-index: 999;
+  z-index: 1001;
 }
 
 .modal-backdrop.show {
@@ -183,7 +80,7 @@
   top: 4%;
   background: linear-gradient(135deg, #ffffff, #f7f9fc);
   padding: 2rem;
-
+  height: 85vh;
   width: 90%;
   max-width: 800px;
   border-radius: 20px;
@@ -272,22 +169,6 @@
   transform: scale(1.03);
 }
 
-// .filters {
-//   display: flex;
-//   gap: 1rem;
-//   margin-bottom: 1.5rem;
-
-//   width: 100%;
-//   max-width: 1000px;
-// }
-
-// .filters input,
-// .filters select,
-// .filters button {
-//   padding: 0.5rem;
-//   font-size: 1rem;
-// }
-
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -338,7 +219,7 @@
 .filters select:focus,
 .filters input:focus {
   border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* Indigo focus ring */
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
 @media (max-width: 768px) {

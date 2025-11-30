@@ -43,24 +43,26 @@ const Jobs = () => {
     <section className="jobs page">
       <div className="container">
         <h1>ALL AVAILABLE JOBS</h1>
-        <div className="banner">
+
+        <div className="jobs-wrapper">
           {jobs.jobs &&
-            jobs.jobs.map((element) => {
-              return (
-                <div className="card" key={element._id}>
-                  <div className="job-details">
-                    <h2>{element.title}</h2>
-                    <p>{element.category}</p>
-                    <p>{element.country}</p>
-                  </div>
-                  <div className="job-actions">
-                    <Link to={`/job/${element._id}`} className="btn-details">
-                      Job Details
-                    </Link>
-                  </div>
+            jobs.jobs.map((element) => (
+              <div className="card" key={element._id}>
+                <div className="card-header-glow"></div>
+
+                <div className="job-details">
+                  <h2>{element.title}</h2>
+                  <p className="tag">{element.category}</p>
+                  <p className="location">{element.country}</p>
                 </div>
-              );
-            })}
+
+                <div className="job-actions">
+                  <Link to={`/job/${element._id}`} className="btn-details">
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
     </section>

@@ -217,6 +217,7 @@ const JobSeekerCard = ({
             <span>CoverLetter:</span> {element.coverLetter}
           </p>
         </div>
+        <div className="button_box">
         <div className="resume">
           <button onClick={() => handleDownload(element._id)}>
             Download Resume (PDF)
@@ -228,6 +229,7 @@ const JobSeekerCard = ({
             Delete Application
           </button>
         </div>
+      </div>
       </div>
     </>
   );
@@ -254,10 +256,12 @@ const EmployerCard = ({ element, openModal }) => {
             <span>CoverLetter:</span> {element.coverLetter}
           </p>
         </div>
+        <div className="button_box">
         <div className="resume">
           <button onClick={() => handleDownload(element._id)}>
             Download Resume (PDF)
           </button>
+          </div>
         </div>
       </div>
     </>

@@ -43,7 +43,11 @@ const HeroSection = () => {
             </p>
           </div>
           <div className="image">
-            <img src="/heroS.jpg" alt="hero" />
+            <img
+              src="/heroS.jpg"
+              alt="hero"
+              onLoad={(e) => e.target.classList.add("loaded")}
+            />
           </div>
         </div>
         <div className="details">

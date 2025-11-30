@@ -272,7 +272,7 @@ const Blogs = () => {
 
         <div className="blogs-list">
           {blogs.map((blog, index) => (
-            <div className="blog-carddd" key={index}>
+            <div className="blog-card-parent" key={index}>
               <Card blog={blog} onDeleteClick={handleDeleteClick} />
             </div>
           ))}
