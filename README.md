@@ -11,13 +11,15 @@ This platform enables users to browse and apply for jobs, manage their applicati
 - 🔐 **User Authentication**  
   Secure login/register with **JWT-based authentication** for both job seekers and employers.
 
-- 💼 **Job Listings & Application Management**  
-  - Users can browse dynamic job listings stored in MongoDB.  
-  - Employers can post jobs and manage applications.  
+- 💼 **Job Listings & Application Management**
+
+  - Users can browse dynamic job listings stored in MongoDB.
+  - Employers can post jobs and manage applications.
   - Candidates can apply and track their application status.
 
-- 🧠 **AI & LLM Integration**  
-  - Integrated **LLM API** to **generate job descriptions** from user prompts.  
+- 🧠 **AI & LLM Integration**
+
+  - Integrated **LLM API** to **generate job descriptions** from user prompts.
   - **Blog Quality Score**: AI evaluates blog content and suggests improvements.
 
 - 🛠️ **State Management with Redux Toolkit**  
@@ -104,9 +106,10 @@ Contributions are what make the open-source community such an amazing place to l
 5. Open a Pull Request (`we will merge within 24 hour`)
 
 ## Please give a star to the repository if you like it.
+
 ## 📬 Contact & Project Info
 
-**👤 Author:** Praful Gupta  
+**👤 Author:** Praful Gupta
 
 [![GitHub](https://img.shields.io/badge/GitHub-prafulthe85-181717?style=flat-square&logo=github)](https://github.com/prafulthe85)  
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-prafulgupta85-blue?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/prafulgupta85/)  
@@ -126,16 +129,18 @@ Contributions are what make the open-source community such an amazing place to l
 
 ## 🔐 Demo Login Credentials
 
-**🧑 Employer**  
-- **Email:** `guptapraful130@gmail.com`  
-- **Password:** `Praful@1234`  
+**🧑 Employer**
 
-**🙋 Job Seeker**  
-- **Email:** `guptapraful130+2@gmail.com`  
+- **Email:** `guptapraful130@gmail.com`
 - **Password:** `Praful@1234`
 
----
+**🙋 Job Seeker**
 
-📫 *Feel free to connect or give feedback!*
+- **Email:** `guptapraful130+2@gmail.com`
+- **Password:** `Praful@1234`
 
+**⌚ Cron Job**
 
+- **Cron Scheduled at:** `https://console.cron-job.org/jobs`
+
+📫 _Feel free to connect or give feedback!_
