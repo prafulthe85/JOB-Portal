@@ -44,6 +44,10 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/blogs", blogsRouter);
 app.use("/api/v1/application", applicationRouter);
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
+});
+
 dbConnection();
 
 app.all("*", (req, res, next) => {
