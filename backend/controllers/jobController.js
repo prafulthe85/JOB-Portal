@@ -4,7 +4,9 @@ import ErrorHandler from "../middlewares/error.js";
 import { getAIQualityFeedback } from "../utils/openRouter.js";
 
 export const getAllJobs = catchAsyncErrors(async (req, res, next) => {
-  const jobs = await Job.find({ expired: false });
+  const jobs = await Job.find({ expired: false }).sort({
+    jobPostedOn: -1,
+  });
   res.status(200).json({
     success: true,
     jobs,

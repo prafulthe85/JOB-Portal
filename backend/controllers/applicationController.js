@@ -1,8 +1,15 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncError.js";
 import ErrorHandler from "../middlewares/error.js";
 import { Application } from "../models/applicationSchema.js";
+import { getAIQualityFeedback } from "../utils/openRouter.js";
 import { Job } from "../models/jobSchema.js";
 import cloudinary from "cloudinary";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
+import mammoth from "mammoth";
+// import { getCache, setCache } from "./redisClient.js";
+import axios from "axios";
 
 export const postApplication = catchAsyncErrors(async (req, res, next) => {
   const { role } = req.user;
@@ -96,7 +103,9 @@ export const jobseekerGetAllApplications = catchAsyncErrors(
       );
     }
     const { _id } = req.user;
-    const applications = await Application.find({ "applicantID.user": _id });
+    const applications = await Application.find({
+      "applicantID.user": _id,
+    }).sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       applications,
@@ -147,3 +156,113 @@ export const jobseekerDeleteApplication = catchAsyncErrors(
     });
   }
 );
+
+export const checkAtsScore = catchAsyncErrors(async (req, res, next) => {
+  const { title, description, location, salary, applicationId } = req.body;
+  console.log("req.body", req.body);
+  if (!title || !description || !location || !salary) {
+    return res.status(400).json({
+      success: false,
+      message: "All job fields are required.",
+    });
+  }
+
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "Resume file is required.",
+    });
+  }
+
+  // console.log("userId", req.user);
+  // const userId = req.user?._id.toString();
+
+  // const cacheKey = `ats:${userId}:${applicationId}`;
+  // const cached = await getCache(cacheKey);
+  // if (cached) {
+  //   console.log("Returning data from cache");
+  //   return res.status(200).json({ ...cached, cached: true });
+  // }
+
+  let resumeText = "";
+
+  // Extract text from PDF
+  if (req.file.mimetype === "application/pdf") {
+    const pdfBuffer = req.file.buffer;
+    const pdfData = await pdfParse(pdfBuffer);
+    resumeText = pdfData.text;
+  }
+
+  // Extract text from DOCX
+  else if (
+    req.file.mimetype ===
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ) {
+    const result = await mammoth.extractRawText({ buffer: req.file.buffer });
+    resumeText = result.value;
+  } else {
+    return res.status(400).json({
+      success: false,
+      message: "Only PDF or DOCX resumes allowed.",
+    });
+  }
+
+  const prompt = `
+    I will give you a job description and a resume text. 
+    You need to compare them and return ATS score strictly in JSON only.
+
+    Job Title: ${title}
+    Job Description: ${description}
+    Job Location: ${location}
+    Job Salary: ${salary}
+
+    Resume Text: 
+    ${resumeText}
+
+    Now analyze both and respond ONLY in the following JSON format:
+
+    {
+      "score": number,
+      "total": 100(give me score out of 100),
+      "feedback": [
+        "Add at least 4 detailed feedback points based on resume-job match"
+      ]
+    }
+  `;
+
+  const llmResponse = await getAIQualityFeedback(prompt);
+  console.log("✅ LLM response:", llmResponse);
+
+  if (llmResponse.status !== 200) {
+    return res
+      .status(500)
+      .json({ success: false, message: llmResponse.message });
+  }
+
+  const dataFromLlm = llmResponse.parsed || {
+    score: 0,
+    total: 100,
+    feedback: [],
+  };
+
+  if (dataFromLlm.score && dataFromLlm.feedback && dataFromLlm.total) {
+    const atsResult = {
+      score: dataFromLlm.score || 0,
+      total: dataFromLlm.total || 100,
+      feedback: dataFromLlm.feedback || [],
+    };
+    // await setCache(cacheKey, atsResult, 60);
+    return res.status(200).json({
+      success: true,
+      ...atsResult,
+      cached: false,
+    });
+  } else {
+    return res.status(200).json({
+      success: true,
+      score: 0,
+      feedback: [],
+      total: 100,
+    });
+  }
+});
