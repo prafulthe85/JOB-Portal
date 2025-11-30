@@ -977,117 +977,252 @@ p {
     width: 100%;
   }
 }
+
+/* =========================
+   Job Details Page
+========================= */
+
 .jobDetail {
   background: #f9fafb;
   padding: 30px 20px;
-}
 
-.jobDetail .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: hidden;
-}
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
 
-.jobDetail .container h3 {
-  font-size: 2rem;
-  color: #2d3748;
-  font-weight: 700;
-  border-bottom: 4px solid #28d8a0;
-  padding-bottom: 12px;
-  margin-bottom: 30px;
-  width: 100%;
-  text-align: center;
-}
+    h3 {
+      font-size: 2rem;
+      color: #2d3748;
+      font-weight: 700;
+      border-bottom: 4px solid #28d8a0;
+      padding-bottom: 12px;
+      margin-bottom: 30px;
+      width: 100%;
+      text-align: center;
+    }
 
-.jobDetail .container .banner {
-  /* width: 100%; */
-  max-width: 800px;
-  background-color: #fff;
-  padding: 40px 30px;
-  border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  display: flex;
-  margin-bottom: 50px;
-  flex-direction: column;
-  gap: 18px;
-  transition: all 0.3s ease-in-out; /* Added transition for smooth effect */
-}
+    .banner {
+      max-width: 800px;
+      background-color: #fff;
+      padding: 40px 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      transition: all 0.3s ease-in-out;
 
-.jobDetail .container .banner:hover {
-  transform: scale(1.05); /* Zoom effect */
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); /* Darker shadow */
-  filter: brightness(1.1); /* Lightens the banner when hovered */
-}
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        filter: brightness(1.1);
+      }
 
-.jobDetail .container .banner .job-info {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+      @media (min-width: 768px) {
+        /* flex-direction: row; */
+        gap: 24px;
+      }
 
-.jobDetail .container .banner p {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #2d5649;
-  margin: 8px 0;
-}
+      .job-info {
+        width: 100%;
+        flex: 2;
 
-.jobDetail .container .banner .job-label {
-  font-weight: 700;
-  color: #4a5568; /* Darker color for the label */
-}
+        p {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #2d5649;
+          margin: 8px 0;
 
-.jobDetail .container .banner p span {
-  font-weight: 400;
-  color: #4a5568;
-}
+          .job-label {
+            font-weight: 700;
+            color: #4a5568;
+          }
 
-.jobDetail .apply-btn {
-  background-color: #28d8a0;
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 500;
-  padding: 12px 25px;
-  border-radius: 6px;
-  text-decoration: none;
-  margin-top: 20px;
-  display: inline-block;
-  text-align: center;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
+          span {
+            font-weight: 400;
+            color: #18191c;
+          }
+        }
+      }
 
-.jobDetail .apply-btn:hover {
-  background-color: #2d5649;
-  transform: scale(1.05);
-}
+      /* Right section for resume upload & buttons */
+      .resume-section {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
 
-.jobDetail .container .banner p span {
-  color: #18191c; /* Dark color for values */
-}
+        input[type="file"] {
+          padding: 10px;
+          border-radius: 8px;
+          border: 1.5px solid #cbd5e0;
+          font-size: 1rem;
+          cursor: pointer;
+          background: #fdfdfd;
+          transition: all 0.3s ease;
 
-@media (max-width: 1200px) {
-  .jobDetail .container {
-    width: 100%;
+          &:hover {
+            border-color: #28d8a0;
+            background: #f7fffb;
+          }
+        }
+
+        .find-match-btn {
+          background-color: #2d5649;
+          color: #fff;
+          padding: 10px 20px;
+          font-size: 1.05rem;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+          border: none;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            background-color: #28d8a0;
+            transform: scale(1.05);
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+
+        .note {
+          font-size: 0.85rem;
+          color: #4a5568;
+        }
+
+        .apply-btn {
+          background-color: #28d8a0;
+          color: white;
+          font-size: 1.1rem;
+          font-weight: 500;
+          padding: 12px 25px;
+          border-radius: 6px;
+          text-decoration: none;
+          display: inline-block;
+          text-align: center;
+          transition: background-color 0.3s ease, transform 0.3s ease;
+
+          &:hover {
+            background-color: #2d5649;
+            transform: scale(1.05);
+          }
+        }
+
+        .error-text {
+          color: #e53e3e;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  /* =========================
+     ATS Modal
+  ======================== */
+  .ats-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    animation: fadeInOverlay 0.2s ease-out;
+  }
+
+  .ats-modal {
+    background: #ffffff;
+    width: 90%;
+    max-width: 480px;
+    border-radius: 15px;
+    padding: 30px 26px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.18);
+    animation: popUp 0.25s ease-out;
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      text-align: center;
+      color: #2d3748;
+      font-weight: 700;
+      border-bottom: 3px solid #28d8a0;
+      display: inline-block;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 6px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #2d5649;
+      margin-bottom: 25px;
+    }
+
+    ul {
+      margin-bottom: 25px;
+
+      li {
+        font-size: 1rem;
+        margin: 8px 0;
+        color: #2d3748;
+        line-height: 1.4;
+        list-style: disc;
+        margin-left: 22px;
+      }
+    }
+
+    .close-btn {
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background-color: #28d8a0;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease-in-out;
+
+      &:hover {
+        background-color: #2d5649;
+        transform: scale(1.03);
+      }
+    }
   }
 }
 
-@media (max-width: 768px) {
-  .jobDetail .container .banner {
-    padding: 30px 20px;
-    max-width: 500px;
+/* Modal Animations */
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
   }
-
-  .jobDetail .container h3 {
-    font-size: 1.8rem;
-  }
-
-  .jobDetail .container .banner p {
-    font-size: 1rem;
+  to {
+    opacity: 1;
   }
 }
+
+@keyframes popUp {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 .application {
   display: flex;
   justify-content: center;
