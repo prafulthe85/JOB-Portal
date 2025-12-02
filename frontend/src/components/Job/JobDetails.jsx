@@ -43,6 +43,24 @@ const JobDetails = () => {
       });
   }, [id, navigateTo]);
 
+  useEffect(() => {
+    if (atsModalOpen) {
+      document.body.style.overflow = "hidden";
+
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+
+      document.documentElement.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+
+      document.documentElement.style.overflow = "auto";
+    };
+  }, [atsModalOpen]);
+
   if (!isAuthorized) {
     navigateTo("/login");
   }
@@ -192,11 +210,16 @@ const JobDetails = () => {
               your ats score: {atsResult.score}/{atsResult.total}
             </h1>
 
-            <ul>
+            <div className="feedback-scroll">
+              <div className="feedback-list">
               {atsResult.feedback.map((fb, idx) => (
-                <li key={idx}>{fb}</li>
+                  <div className="feedback-item" key={idx}>
+                    <span className="bullet"></span>
+                    <p>{fb}</p>
+                  </div>
               ))}
-            </ul>
+              </div>
+            </div>
 
             <button
               className="close-btn"
