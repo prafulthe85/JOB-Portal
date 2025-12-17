@@ -13,7 +13,7 @@ export const sendToken = (user, statusCode, res, message) => {
   };
   console.log("🔐 Sending Auth Token Cookie:");
   console.log("👉 isProduction:", isProduction);
-  logger.info("👉 cookie expires at:", options.expires.toISOString());
+  logger.info("👉 cookie expires at:", options.expires.toString());
   console.log("👉 token length:", token.length); // Don't log full token in production
 
   res.status(statusCode).cookie("token", token, options).json({
