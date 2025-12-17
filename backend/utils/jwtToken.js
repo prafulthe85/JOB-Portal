@@ -1,4 +1,4 @@
-const { logger } = require("./logger");
+import { logger } from "./logger.js";
 
 export const sendToken = (user, statusCode, res, message) => {
   const token = user.getJWTToken();
