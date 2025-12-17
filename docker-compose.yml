@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jobportal_backend
+    restart: on-failure
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: jobportal_frontend
+    restart: on-failure
+    ports:
+      - "5173:80" # maps container nginx:80 -> host:3000
+    depends_on:
+      - backend
+# Optional local mongo for offline development:
+# Uncomment the block below if you want to run local Mongo instead of Atlas.
+# If enabled, update backend/.env DB_URL to:
+# mongodb://root:example@mongo:27017/yourdbname?authSource=admin
+#
+#  mongo:
+#    image: mongo:6.0
+#    container_name: jobportal_mongo
+#    restart: unless-stopped
+#    volumes:
+#      - mongo-data:/data/db
+#    ports:
+#      - "27017:27017"
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example
+
+# volumes:
+# mongo-data:

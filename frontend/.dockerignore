@@ -1,0 +1,23 @@
+node_modules
+dist
+build
+npm-debug.log
+
+# Environment variables
+- .env
+- .env.*     # catch all env variations
++ # .env files should NOT be ignored for Docker build
++ !.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git & Docker
+.git
+.gitignore
+docker-compose.yml
+
+# Editor folders
+.vscode
+.idea

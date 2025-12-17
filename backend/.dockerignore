@@ -1,0 +1,32 @@
+# Node modules should not be copied
+node_modules
+npm-debug.log
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.example
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Git & Docker files
+.git
+.gitignore
+docker-compose.yml
+
+# Build artifacts
+dist
+coverage
+
+# Editor folders
+.vscode
+.idea
