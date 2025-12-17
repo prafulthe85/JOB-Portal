@@ -220,6 +220,32 @@ p {
   height: auto;
   border-radius: 12px;
 }
+
+.authPage {
+  /* Default text color */
+  .demo-label {
+    color: #ab2222;
+    transition: color 0.3s ease;
+  }
+
+  .demo-label:hover {
+    color: #ff0000;
+  }
+
+  .demo-checkbox-input {
+    accent-color: #d33131; /* Modern browsers */
+    cursor: pointer;
+  }
+
+  .demo-label:hover .demo-checkbox-input {
+    accent-color: #ff4d4d;
+  }
+
+  .demo-checkbox-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(211, 49, 49, 0.3);
+  }
+}
 @media (max-width: 1520px) {
   .authPage {
     min-width: 100%;

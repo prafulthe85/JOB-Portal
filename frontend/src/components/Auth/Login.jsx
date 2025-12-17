@@ -11,6 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const [useDemoCreds, setUseDemoCreds] = useState(false);
 
   const { isAuthorized, setIsAuthorized } = useContext(Context);
 
@@ -34,6 +35,31 @@ const Login = () => {
       setIsAuthorized(true);
     } catch (error) {
       toast.error(error.response.data.message);
+      // setLoading(false);
+    }
+  };
+
+  const handleDemoCheckbox = (e) => {
+    const checked = e.target.checked;
+
+    if (!role) {
+      alert("Please select role first");
+      return;
+    }
+
+    setUseDemoCreds(checked);
+
+    if (checked) {
+      if (role === "Employer") {
+        setEmail("guptapraful130@gmail.com");
+        setPassword("Praful@1234");
+      } else if (role === "Job Seeker") {
+        setEmail("guptapraful130+2@gmail.com");
+        setPassword("Praful@1234");
+      }
+    } else {
+      setEmail("");
+      setPassword("");
     }
   };
 
@@ -56,7 +82,12 @@ const Login = () => {
                 <select
                   className="role-select"
                   value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  onChange={(e) => {
+                    setRole(e.target.value);
+                    setUseDemoCreds(false);
+                    setEmail("");
+                    setPassword("");
+                  }}
                 >
                   <option value="">Select Role</option>
 
@@ -89,6 +120,27 @@ const Login = () => {
                 />
                 <RiLock2Fill />
               </div>
+            </div>
+            <div className="inputTag demo-checkbox">
+              <label
+                className="demo-label"
+                style={{
+                  fontSize: "14px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  cursor: "pointer",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={useDemoCreds}
+                  onChange={handleDemoCheckbox}
+                  className="demo-checkbox-input"
+                />
+                Fill Demo Credentials (Select Role first)
+              </label>
             </div>
             <button type="submit" onClick={handleLogin}>
               Login
