@@ -3,58 +3,63 @@ import validator from "validator";
 
 const applicationSchema = new mongoose.Schema(
   {
-  name: {
-    type: String,
-    required: [true, "Please enter your Name!"],
-    minLength: [3, "Name must contain at least 3 Characters!"],
-    maxLength: [30, "Name cannot exceed 30 Characters!"],
-  },
-  email: {
-    type: String,
-    required: [true, "Please enter your Email!"],
-    validate: [validator.isEmail, "Please provide a valid Email!"],
-  },
-  coverLetter: {
-    type: String,
-    required: [true, "Please provide a cover letter!"],
-  },
-  phone: {
-    type: Number,
-    required: [true, "Please enter your Phone Number!"],
-  },
-  address: {
-    type: String,
-    required: [true, "Please enter your Address!"],
-  },
-  resume: {
-    data: Buffer,
-    contentType: String,
-    fileName: String,
-  },
-  applicantID: {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    role: {
+    name: {
       type: String,
-      enum: ["Job Seeker"],
-      required: true,
+      required: [true, "Please enter your Name!"],
+      minLength: [3, "Name must contain at least 3 Characters!"],
+      maxLength: [30, "Name cannot exceed 30 Characters!"],
     },
-  },
-  employerID: {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    role: {
+    email: {
       type: String,
-      enum: ["Employer"],
-      required: true,
+      required: [true, "Please enter your Email!"],
+      validate: [validator.isEmail, "Please provide a valid Email!"],
     },
-  },
+    coverLetter: {
+      type: String,
+      required: [true, "Please provide a cover letter!"],
+    },
+    phone: {
+      type: Number,
+      required: [true, "Please enter your Phone Number!"],
+    },
+    address: {
+      type: String,
+      required: [true, "Please enter your Address!"],
+    },
+    resume: {
+      data: Buffer,
+      contentType: String,
+      fileName: String,
+    },
+    applicantID: {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      role: {
+        type: String,
+        enum: ["Job Seeker"],
+        required: true,
+      },
+    },
+    employerID: {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      role: {
+        type: String,
+        enum: ["Employer"],
+        required: true,
+      },
+    },
+    currentStatus: {
+      type: String,
+      enum: ["None", "Shortlisted", "Rejected"],
+      default: "None",
+    },
   },
   { timestamps: true }
 );

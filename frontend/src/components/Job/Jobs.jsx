@@ -52,8 +52,13 @@ const Jobs = () => {
 
                 <div className="job-details">
                   <h2>{element.title}</h2>
-                  <p className="tag">{element.category}</p>
-                  <p className="location">{element.country}</p>
+                  <p className="tag">{element.companyName}</p>
+                  <p className="location">{element.city}</p>
+                  <p className="location">Salary: {element.salary}</p>
+                  <p className="location">
+                    Date Posted:{" "}
+                    {new Date(element.jobPostedOn).toLocaleDateString()}
+                  </p>
                 </div>
 
                 <div className="job-actions">

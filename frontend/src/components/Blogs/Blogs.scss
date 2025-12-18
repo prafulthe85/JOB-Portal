@@ -241,7 +241,8 @@
 .pagination {
   width: 100%;
   max-width: 1000px;
-  margin: 2rem auto;
+  padding: 1rem;
+  margin: 1rem auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -252,7 +253,7 @@
 
 .pagination-btn {
   padding: 0.5rem 1.5rem;
-  background-color: #70a9a1;
+  background-color: #208b7c;
   color: white;
   border: none;
   border-radius: 8px;
@@ -263,7 +264,7 @@
 }
 
 .pagination-btn:hover {
-  background-color: #5b8e89;
+  background-color: #009b85;
   transform: translateY(-2px);
 }
 

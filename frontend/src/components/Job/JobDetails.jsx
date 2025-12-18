@@ -153,8 +153,8 @@ const JobDetails = () => {
               <span className="job-label">City:</span> <span>{job.city}</span>
             </p>
             <p>
-              <span className="job-label">Location:</span>{" "}
-              <span>{job.location}</span>
+              <span className="job-label">Company:</span>{" "}
+              <span>{job.companyName}</span>
             </p>
             <p>
               <span className="job-label">Description:</span>{" "}
@@ -162,7 +162,7 @@ const JobDetails = () => {
             </p>
             <p>
               <span className="job-label">Job Posted On:</span>{" "}
-              <span>{job.jobPostedOn}</span>
+              <span>{new Date(job.jobPostedOn).toLocaleDateString()}</span>
             </p>
             <p>
               <span className="job-label">Salary:</span> {job.salary}

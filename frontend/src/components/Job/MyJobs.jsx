@@ -286,9 +286,9 @@ const MyJobs = () => {
                           />
                         </div>
                         <div>
-                          <span>Location: </span>
+                          <span>Company Name: </span>
                           <textarea
-                            value={element.location}
+                            value={element.companyName}
                             rows={5}
                             disabled={
                               editingMode !== element._id ? true : false
@@ -296,7 +296,7 @@ const MyJobs = () => {
                             onChange={(e) =>
                               handleInputChange(
                                 element._id,
-                                "location",
+                                "companyName",
                                 e.target.value
                               )
                             }

@@ -20,7 +20,7 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
       new ErrorHandler("Job Seeker not allowed to access this resource.", 400)
     );
   }
-  const { title, description, category, country, city, location, salary } =
+  const { title, description, category, country, city, companyName, salary } =
     req.body;
 
   if (
@@ -29,7 +29,7 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
     !category ||
     !country ||
     !city ||
-    !location ||
+    !companyName ||
     !salary
   ) {
     return next(new ErrorHandler("Please provide full job details.", 400));
@@ -42,7 +42,7 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
     category,
     country,
     city,
-    location,
+    companyName,
     salary,
     postedBy,
   });
@@ -149,7 +149,7 @@ export const generateAIJobDetails = catchAsyncErrors(async (req, res, next) => {
                   "category": "Job category ",
                   "country": "Country name",
                   "city": "City name",
-                  "location": "Full location (City + Country)",
+                  "companyName": "Company name",
         "salary": "Salary amount(should be a nubmer)",
                   "description": {
                     "requirement": "Write 2-3 sentences describing the top requirements of the job. Use a natural tone, not bullet points.",
@@ -161,6 +161,7 @@ export const generateAIJobDetails = catchAsyncErrors(async (req, res, next) => {
 
                 Rules:
                 - Output must be ONLY in JSON format.
+                - If company name is not provided, make a reasonable assumption based on the job description.
                 - If any detail is missing in the input, make a reasonable assumption based on the job context.
                 - Do not include explanations or text outside the JSON.
       - **For "salary", pick a number only, if nothing is passed assume a market average.**
@@ -179,7 +180,6 @@ export const generateAIJobDetails = catchAsyncErrors(async (req, res, next) => {
 
     const llmResponse = await getAIQualityFeedback(prompt);
 
-
     if (llmResponse.status !== 200) {
       return res
         .status(500)
@@ -195,7 +195,7 @@ export const generateAIJobDetails = catchAsyncErrors(async (req, res, next) => {
         category: dataFromLlm.category,
         country: dataFromLlm.country,
         city: dataFromLlm.city,
-        location: dataFromLlm.location,
+        companyName: dataFromLlm.companyName,
         salary: dataFromLlm.salary,
         description: dataFromLlm.description,
       });

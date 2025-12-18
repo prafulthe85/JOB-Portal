@@ -25,10 +25,10 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a city name."],
   },
-  location: {
+  companyName: {
     type: String,
-    required: [true, "Please provide location."],
-    minLength: [5, "Location must contian at least 20 characters!"],
+    required: [true, "Please provide companyName."],
+    minLength: [5, "companyName must contian at least 20 characters!"],
   },
   salary: {
     type: Number,

@@ -94,6 +94,43 @@ export const employerGetAllApplications = catchAsyncErrors(
   }
 );
 
+export const employerUpdateApplication = catchAsyncErrors(
+  async (req, res, next) => {
+    const { role } = req.user;
+    if (role === "Job Seeker") {
+      return next(
+        new ErrorHandler("Job Seeker not allowed to access this resource.", 400)
+      );
+    }
+    const { id } = req.params;
+    const { currentStatus } = req.body;
+
+    const allowedStatus = ["None", "Shortlisted", "Rejected"];
+    if (!allowedStatus.includes(currentStatus)) {
+      return next(new ErrorHandler("Invalid application status.", 400));
+    }
+
+    const application = await Application.findByIdAndUpdate(
+      id,
+      { currentStatus },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!application) {
+      return next(new ErrorHandler("OOPS! Application not found.", 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Application ${currentStatus}`,
+      application,
+    });
+  }
+);
+
 export const jobseekerGetAllApplications = catchAsyncErrors(
   async (req, res, next) => {
     const { role } = req.user;
@@ -158,9 +195,9 @@ export const jobseekerDeleteApplication = catchAsyncErrors(
 );
 
 export const checkAtsScore = catchAsyncErrors(async (req, res, next) => {
-  const { title, description, location, salary, applicationId } = req.body;
+  const { title, description, salary, applicationId } = req.body;
   console.log("req.body", req.body);
-  if (!title || !description || !location || !salary) {
+  if (!title || !description || !salary) {
     return res.status(400).json({
       success: false,
       message: "All job fields are required.",
@@ -213,7 +250,6 @@ export const checkAtsScore = catchAsyncErrors(async (req, res, next) => {
 
     Job Title: ${title}
     Job Description: ${description}
-    Job Location: ${location}
     Job Salary: ${salary}
 
     Resume Text: 

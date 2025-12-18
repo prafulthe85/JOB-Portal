@@ -11,7 +11,7 @@ const PostJob = () => {
   const [category, setCategory] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
-  const [location, setLocation] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [salary, setSalary] = useState("");
   const [aiPrompt, setAiPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +36,7 @@ const PostJob = () => {
           category,
           country,
           city,
-          location,
+          companyName,
           salary,
         },
         {
@@ -54,7 +54,7 @@ const PostJob = () => {
           setCategory("");
           setCountry("");
           setCity("");
-          setLocation("");
+          setCompanyName("");
           setDescription("");
           setSalary("");
           setAiPrompt("");
@@ -122,7 +122,7 @@ const PostJob = () => {
       setTitle(job.title || "");
       setCountry(job.country || "");
       setCity(job.city || "");
-      setLocation(job.location || "");
+      setCompanyName(job.companyName || "");
       setSalary(job.salary || "");
       const incomingCategory = job.category || "";
 
@@ -229,9 +229,9 @@ const PostJob = () => {
             </div>
             <input
               type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Location"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="Company Name"
             />
             <div className="">
               <input

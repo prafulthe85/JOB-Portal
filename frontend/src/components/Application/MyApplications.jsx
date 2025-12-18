@@ -4,6 +4,7 @@ import { Context } from "../../main";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Check, X } from "lucide-react";
 import ResumeModal from "./ResumeModal";
 import nodata from "../../assets/no-data.png";
 import Loader from "../Loader";
@@ -93,49 +94,49 @@ const MyApplications = () => {
 
   return (
     <>
-    <section className="my_applications page">
-      <div className="container">
-        <h2 className="section-heading">
-          {user?.role === "Job Seeker"
-            ? "My Applications"
-            : "Applications From Job Seekers"}
-        </h2>
+      <section className="my_applications page">
+        <div className="container">
+          <h2 className="section-heading">
+            {user?.role === "Job Seeker"
+              ? "My Applications"
+              : "Applications From Job Seekers"}
+          </h2>
 
-        {applications.length === 0 ? (
-          <div className="empty-state">
-            <img src={nodata} alt="No Data" />
-            <p>No applications found</p>
-          </div>
-        ) : (
-          <div className="applications-grid">
-            {applications.map((element) =>
-              user?.role === "Job Seeker" ? (
-                <JobSeekerCard
-                  key={element._id}
-                  element={element}
+          {applications.length === 0 ? (
+            <div className="empty-state">
+              <img src={nodata} alt="No Data" />
+              <p>No applications found</p>
+            </div>
+          ) : (
+            <div className="applications-grid">
+              {applications.map((element) =>
+                user?.role === "Job Seeker" ? (
+                  <JobSeekerCard
+                    key={element._id}
+                    element={element}
                     // deleteApplication={deleteApplication}
-                  openModal={openModal}
+                    openModal={openModal}
                     triggerDelete={(id) => {
                       setSelectedIdToDelete(id);
                       setShowConfirmModal(true);
                     }}
-                />
-              ) : (
-                <EmployerCard
-                  key={element._id}
-                  element={element}
-                  openModal={openModal}
-                />
-              )
-            )}
-          </div>
-        )}
-      </div>
+                  />
+                ) : (
+                  <EmployerCard
+                    key={element._id}
+                    element={element}
+                    openModal={openModal}
+                  />
+                )
+              )}
+            </div>
+          )}
+        </div>
 
-      {modalOpen && (
-        <ResumeModal imageUrl={resumeImageUrl} onClose={closeModal} />
-      )}
-    </section>
+        {modalOpen && (
+          <ResumeModal imageUrl={resumeImageUrl} onClose={closeModal} />
+        )}
+      </section>
 
       {showConfirmModal && (
         <ConfirmModal
@@ -197,9 +198,19 @@ const JobSeekerCard = ({
   openModal,
   triggerDelete,
 }) => {
+  const initialStatus = element.currentStatus || "None";
   return (
     <>
       <div className="job_seeker_card">
+        {initialStatus !== "None" && (
+          <div
+            className={`status-chip ${
+              initialStatus === "Shortlisted" ? "shortlisted" : "rejected"
+            }`}
+          >
+            <span>{initialStatus}🎉</span>
+          </div>
+        )}
         <div className="detail">
           <p>
             <span>Name:</span> {element.name}
@@ -218,27 +229,85 @@ const JobSeekerCard = ({
           </p>
         </div>
         <div className="button_box">
-        <div className="resume">
-          <button onClick={() => handleDownload(element._id)}>
-            Download Resume (PDF)
-          </button>
-        </div>
+          <div className="resume">
+            <button onClick={() => handleDownload(element._id)}>
+              Download Resume (PDF)
+            </button>
+          </div>
 
-        <div className="btn_area">
-          <button onClick={() => triggerDelete(element._id)}>
-            Delete Application
-          </button>
+          <div className="btn_area">
+            <button onClick={() => triggerDelete(element._id)}>
+              Delete Application
+            </button>
+          </div>
         </div>
-      </div>
       </div>
     </>
   );
 };
 
 const EmployerCard = ({ element, openModal }) => {
+  console.log("element: ", element);
+  const initialStatus = element.currentStatus || "None";
+  const [decision, setDecision] = useState(initialStatus);
+
+  const handleApplicationStatus = async (status) => {
+    setDecision(status);
+
+    // 🔴 API call will go here later
+    const url = `${
+      import.meta.env.VITE_SERVER_URL
+    }/api/v1/application/employer/update/${element._id}`;
+    const res = await axios.put(
+      url,
+      {
+        currentStatus: status,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    console.log("Response:", res.data);
+  };
+
   return (
     <>
       <div className="job_seeker_card">
+        {decision !== "None" && (
+          <div
+            className={`status-chip ${
+              decision === "Shortlisted" ? "shortlisted" : "rejected"
+            }`}
+          >
+            <span>{decision}</span>
+
+            <button
+              className="chip-clear"
+              onClick={() => handleApplicationStatus("None")}
+              title="Clear status"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
+        <div className="action-icons">
+          <button
+            className="icon-btn approve"
+            disabled={decision !== "None"}
+            onClick={() => handleApplicationStatus("Shortlisted")}
+          >
+            <Check size={18} />
+          </button>
+
+          <button
+            className="icon-btn reject"
+            disabled={decision !== "None"}
+            onClick={() => handleApplicationStatus("Rejected")}
+          >
+            <X size={18} />
+          </button>
+        </div>
         <div className="detail">
           <p>
             <span>Name:</span> {element.name}
@@ -257,10 +326,10 @@ const EmployerCard = ({ element, openModal }) => {
           </p>
         </div>
         <div className="button_box">
-        <div className="resume">
-          <button onClick={() => handleDownload(element._id)}>
-            Download Resume (PDF)
-          </button>
+          <div className="resume">
+            <button onClick={() => handleDownload(element._id)}>
+              Download Resume (PDF)
+            </button>
           </div>
         </div>
       </div>
