@@ -109,12 +109,12 @@ const MyApplications = () => {
             </div>
           ) : (
             <div className="applications-grid">
-              {applications.map((element) =>
+              {applications.map((element, index) =>
                 user?.role === "Job Seeker" ? (
                   <JobSeekerCard
                     key={element._id}
                     element={element}
-                    // deleteApplication={deleteApplication}
+                    index={index}
                     openModal={openModal}
                     triggerDelete={(id) => {
                       setSelectedIdToDelete(id);
@@ -125,6 +125,7 @@ const MyApplications = () => {
                   <EmployerCard
                     key={element._id}
                     element={element}
+                    index={index}
                     openModal={openModal}
                   />
                 )
@@ -194,14 +195,14 @@ const handleDownload = async (id) => {
 
 const JobSeekerCard = ({
   element,
-  deleteApplication,
   openModal,
   triggerDelete,
+  index = 0,
 }) => {
   const initialStatus = element.currentStatus || "None";
   return (
     <>
-      <div className="job_seeker_card">
+      <div className="job_seeker_card" style={{ animationDelay: `${index * 0.07}s` }}>
         {initialStatus !== "None" && (
           <div
             className={`status-chip ${
@@ -246,15 +247,13 @@ const JobSeekerCard = ({
   );
 };
 
-const EmployerCard = ({ element, openModal }) => {
-  console.log("element: ", element);
+const EmployerCard = ({ element, openModal, index = 0 }) => {
   const initialStatus = element.currentStatus || "None";
   const [decision, setDecision] = useState(initialStatus);
 
   const handleApplicationStatus = async (status) => {
     setDecision(status);
 
-    // 🔴 API call will go here later
     const url = `${
       import.meta.env.VITE_SERVER_URL
     }/api/v1/application/employer/update/${element._id}`;
@@ -267,13 +266,11 @@ const EmployerCard = ({ element, openModal }) => {
         withCredentials: true,
       }
     );
-
-    console.log("Response:", res.data);
   };
 
   return (
     <>
-      <div className="job_seeker_card">
+      <div className="job_seeker_card" style={{ animationDelay: `${index * 0.07}s` }}>
         {decision !== "None" && (
           <div
             className={`status-chip ${

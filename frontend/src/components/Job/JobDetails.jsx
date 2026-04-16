@@ -38,7 +38,7 @@ const JobDetails = () => {
         setJob(res.data.job || {});
         setIsLoading(false);
       })
-      .catch((error) => {
+      .catch(() => {
         navigateTo("/notfound");
       });
   }, [id, navigateTo]);
@@ -46,17 +46,13 @@ const JobDetails = () => {
   useEffect(() => {
     if (atsModalOpen) {
       document.body.style.overflow = "hidden";
-
       document.documentElement.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
-
       document.documentElement.style.overflow = "auto";
     }
-
     return () => {
       document.body.style.overflow = "auto";
-
       document.documentElement.style.overflow = "auto";
     };
   }, [atsModalOpen]);
@@ -100,7 +96,6 @@ const JobDetails = () => {
         job.location || `${job.city || ""}, ${job.country || ""}`
       );
       formData.append("salary", job.salary || "");
-
       formData.append("resume", resumeFile);
 
       const url = `${
@@ -115,7 +110,6 @@ const JobDetails = () => {
 
       if (response.status === 200 && response.data) {
         const { score = 0, total = 0, feedback = [] } = response.data;
-        console.log("ATS result:", { score, total, feedback });
         setAtsResult({ score, total, feedback: normalizeFeedback(feedback) });
         setAtsModalOpen(true);
       } else {
@@ -139,33 +133,34 @@ const JobDetails = () => {
         <div className="banner">
           <div className="job-info">
             <p>
-              <span className="job-label">Title:</span> <span>{job.title}</span>
+              <span className="job-label">Title</span> <span>{job.title}</span>
             </p>
             <p>
-              <span className="job-label">Category:</span>{" "}
+              <span className="job-label">Category</span>{" "}
               <span>{job.category}</span>
             </p>
             <p>
-              <span className="job-label">Country:</span>{" "}
+              <span className="job-label">Country</span>{" "}
               <span>{job.country}</span>
             </p>
             <p>
-              <span className="job-label">City:</span> <span>{job.city}</span>
+              <span className="job-label">City</span> <span>{job.city}</span>
             </p>
             <p>
-              <span className="job-label">Company:</span>{" "}
+              <span className="job-label">Company</span>{" "}
               <span>{job.companyName}</span>
             </p>
             <p>
-              <span className="job-label">Description:</span>{" "}
+              <span className="job-label">Description</span>{" "}
               <span>{job.description}</span>
             </p>
             <p>
-              <span className="job-label">Job Posted On:</span>{" "}
+              <span className="job-label">Posted On</span>{" "}
               <span>{new Date(job.jobPostedOn).toLocaleDateString()}</span>
             </p>
             <p>
-              <span className="job-label">Salary:</span> {job.salary}
+              <span className="job-label">Salary</span>{" "}
+              <span>{job.salary}</span>
             </p>
           </div>
 
@@ -180,21 +175,27 @@ const JobDetails = () => {
                 />
               </label>
 
-              <button
-                onClick={handleFindTheMatch}
-                disabled={atsLoading}
-                className="find-match-btn"
-              >
-                {atsLoading ? "Checking..." : "Find the match"}
-              </button>
+              <div className="resume-actions">
+                <button
+                  onClick={handleFindTheMatch}
+                  disabled={atsLoading}
+                  className="find-match-btn"
+                >
+                  {atsLoading ? "Checking..." : "Find the Match"}
+                </button>
+
+                <Link
+                  to={atsLoading ? "#" : `/application/${job._id}`}
+                  className={`apply-btn${atsLoading ? " disabled" : ""}`}
+                  onClick={(e) => atsLoading && e.preventDefault()}
+                >
+                  Apply Now
+                </Link>
+              </div>
 
               <p className="note">
                 Check your resume ATS score based on this job
               </p>
-
-              <Link to={`/application/${job._id}`} className="apply-btn">
-                Apply Now
-              </Link>
 
               {atsError && <p className="error-text">{atsError}</p>}
             </div>
@@ -205,28 +206,33 @@ const JobDetails = () => {
       {atsModalOpen && (
         <div className="ats-modal-overlay">
           <div className="ats-modal">
-            <h2>Your resume score</h2>
-            <h1>
-              your ats score: {atsResult.score}/{atsResult.total}
-            </h1>
+            <div className="ats-modal-header">
+              <h2>Resume Score</h2>
+              <h1>
+                {atsResult.score}/{atsResult.total}
+              </h1>
+              <span className="ats-score-label">ATS Match Score</span>
+            </div>
 
             <div className="feedback-scroll">
               <div className="feedback-list">
-              {atsResult.feedback.map((fb, idx) => (
+                {atsResult.feedback.map((fb, idx) => (
                   <div className="feedback-item" key={idx}>
                     <span className="bullet"></span>
                     <p>{fb}</p>
                   </div>
-              ))}
+                ))}
               </div>
             </div>
 
-            <button
-              className="close-btn"
-              onClick={() => setAtsModalOpen(false)}
-            >
-              Close
-            </button>
+            <div className="ats-modal-footer">
+              <button
+                className="close-btn"
+                onClick={() => setAtsModalOpen(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

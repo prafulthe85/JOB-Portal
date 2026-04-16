@@ -13,86 +13,34 @@ import { useNavigate } from "react-router-dom";
 
 const PopularCategories = () => {
   const categories = [
-    {
-      id: 1,
-      title: "Graphics & Design",
-      subTitle: "305 Open Positions",
-      icon: <MdOutlineDesignServices />,
-    },
-    {
-      id: 2,
-      title: "Mobile App Development",
-      subTitle: "500 Open Positions",
-      icon: <TbAppsFilled />,
-    },
-    {
-      id: 3,
-      title: "Frontend Web Development",
-      subTitle: "200 Open Positions",
-      icon: <MdOutlineWebhook />,
-    },
-    {
-      id: 4,
-      title: "MERN STACK Development",
-      subTitle: "1000+ Open Postions",
-      icon: <FaReact />,
-    },
-    {
-      id: 5,
-      title: "Account & Finance",
-      subTitle: "150 Open Positions",
-      icon: <MdAccountBalance />,
-    },
-    {
-      id: 6,
-      title: "Artificial Intelligence",
-      subTitle: "867 Open Positions",
-      icon: <GiArtificialIntelligence />,
-    },
-    {
-      id: 7,
-      title: "Video Animation",
-      subTitle: "50 Open Positions",
-      icon: <MdOutlineAnimation />,
-    },
-    {
-      id: 8,
-      title: "Game Development",
-      subTitle: "80 Open Positions",
-      icon: <IoGameController />,
-    },
+    { id: 1, title: "Graphics & Design", subTitle: "305 Open Positions", icon: <MdOutlineDesignServices /> },
+    { id: 2, title: "Mobile App Development", subTitle: "500 Open Positions", icon: <TbAppsFilled /> },
+    { id: 3, title: "Frontend Web Development", subTitle: "200 Open Positions", icon: <MdOutlineWebhook /> },
+    { id: 4, title: "MERN Stack Development", subTitle: "1000+ Open Positions", icon: <FaReact /> },
+    { id: 5, title: "Account & Finance", subTitle: "150 Open Positions", icon: <MdAccountBalance /> },
+    { id: 6, title: "Artificial Intelligence", subTitle: "867 Open Positions", icon: <GiArtificialIntelligence /> },
+    { id: 7, title: "Video Animation", subTitle: "50 Open Positions", icon: <MdOutlineAnimation /> },
+    { id: 8, title: "Game Development", subTitle: "80 Open Positions", icon: <IoGameController /> },
   ];
-  const bgColors = ["#ffe0ec", "#e5f4ff", "#e6ffed", "#fff3cd", "#f5e6ff"];
   const navigate = useNavigate();
 
   return (
     <div className="categories">
-      <h3>POPULAR CATEGORIES</h3>
+      <h3>Popular Categories</h3>
       <div className="banner">
-        {categories.map((element) => {
-          return (
-            <div
-              className="card"
-              key={element.id}
-              onClick={() => navigate("/job/getall")}
-            >
-              {/* <div className="icon">{element.icon}</div> */}
-              <div
-                className="icon"
-                style={{
-                  background:
-                    bgColors[Math.floor(Math.random() * bgColors.length)],
-                }}
-              >
-                {element.icon}
-              </div>
-              <div className="text">
-                <p>{element.title}</p>
-                <p>{element.subTitle}</p>
-              </div>
+        {categories.map((element) => (
+          <div
+            className="card"
+            key={element.id}
+            onClick={() => navigate("/job/getall")}
+          >
+            <div className="icon">{element.icon}</div>
+            <div className="text">
+              <p>{element.title}</p>
+              <p>{element.subTitle}</p>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );

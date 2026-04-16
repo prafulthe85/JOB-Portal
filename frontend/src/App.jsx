@@ -20,6 +20,7 @@ import MyJobs from "./components/Job/MyJobs";
 import Blogs from "./components/Blogs/Blogs";
 import BlogDetails from "./components/Blogs/BlogDetails";
 import Loader from "./components/Loader.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 const App = () => {
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
   const [loading, setLoading] = useState(true);
@@ -51,6 +52,7 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />

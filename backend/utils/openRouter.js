@@ -1,7 +1,14 @@
 import { OpenRouter } from "@openrouter/sdk";
-const openrouter = new OpenRouter({
-  apiKey: process.env.VITE_OPEN_ROUTER_KEY,
-});
+
+let openrouter = null;
+function getClient() {
+  if (!openrouter) {
+    openrouter = new OpenRouter({
+      apiKey: process.env.OPEN_ROUTER_KEY,
+    });
+  }
+  return openrouter;
+}
 
 const safeParseJSON = (text) => {
   try {
@@ -24,7 +31,7 @@ const safeParseJSON = (text) => {
 
 export const getAIQualityFeedback = async (prompt) => {
   try {
-    const response = await openrouter.chat.send({
+    const response = await getClient().chat.send({
       model: "deepseek/deepseek-chat",
       messages: [
         {
@@ -53,7 +60,7 @@ export const getAIQualityFeedback = async (prompt) => {
       parsed,
     };
   } catch (error) {
-    console.error("🔥 OpenRouter SDK Error:", error);
+    console.error("🔥 OpenRouter SDK Error:", error.message);
 
     return {
       status: 500,

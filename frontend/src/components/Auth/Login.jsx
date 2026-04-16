@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { RiLock2Fill } from "react-icons/ri";
 import { Link, Navigate } from "react-router-dom";
@@ -13,7 +13,20 @@ const Login = () => {
   const [role, setRole] = useState("");
   const [useDemoCreds, setUseDemoCreds] = useState(false);
 
+  const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
+  const roleDropdownRef = useRef(null);
+
   const { isAuthorized, setIsAuthorized } = useContext(Context);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (roleDropdownRef.current && !roleDropdownRef.current.contains(e.target)) {
+        setRoleDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -78,23 +91,36 @@ const Login = () => {
           <form>
             <div className="inputTag">
               <label>Login As</label>
-              <div>
-                <select
-                  className="role-select"
-                  value={role}
-                  onChange={(e) => {
-                    setRole(e.target.value);
-                    setUseDemoCreds(false);
-                    setEmail("");
-                    setPassword("");
-                  }}
+              <div className="auth-role-field" ref={roleDropdownRef}>
+                <button
+                  type="button"
+                  className={`auth-role-btn${roleDropdownOpen ? " open" : ""}${!role ? " placeholder" : ""}`}
+                  onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
                 >
-                  <option value="">Select Role</option>
-
-                  <option value="Job Seeker">Job Seeker</option>
-                  <option value="Employer">Employer</option>
-                </select>
-                <FaRegUser />
+                  {role || "Select Role"}
+                  <span className="auth-role-chevron">▼</span>
+                </button>
+                {roleDropdownOpen && (
+                  <div className="auth-role-list">
+                    {["Job Seeker", "Employer"].map((opt) => (
+                      <div
+                        key={opt}
+                        className={`auth-role-item${role === opt ? " selected" : ""}`}
+                        onClick={() => {
+                          setRole(opt);
+                          setRoleDropdownOpen(false);
+                          setUseDemoCreds(false);
+                          setEmail("");
+                          setPassword("");
+                        }}
+                      >
+                        <span className="auth-role-dot"></span>
+                        {opt}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <span className="auth-icon-box"><FaRegUser /></span>
               </div>
             </div>
             <div className="inputTag">
@@ -121,25 +147,21 @@ const Login = () => {
                 <RiLock2Fill />
               </div>
             </div>
-            <div className="inputTag demo-checkbox">
-              <label
-                className="demo-label"
-                style={{
-                  fontSize: "14px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  cursor: "pointer",
-                }}
-              >
+            <div className="auth-divider">
+              <span>or</span>
+            </div>
+            <div className={`demo-creds-card${useDemoCreds ? " active" : ""}`}>
+              <label className="demo-label">
                 <input
                   type="checkbox"
                   checked={useDemoCreds}
                   onChange={handleDemoCheckbox}
                   className="demo-checkbox-input"
                 />
-                Fill Demo Credentials (Select Role first)
+                <span className="demo-text">
+                  <strong>Use demo credentials to Login and explore
+                  </strong>
+                </span>
               </label>
             </div>
             <button type="submit" onClick={handleLogin}>
