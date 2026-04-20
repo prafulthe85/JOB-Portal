@@ -3,9 +3,18 @@ import { OpenRouter } from "@openrouter/sdk";
 let openrouter = null;
 function getClient() {
   if (!openrouter) {
-    openrouter = new OpenRouter({
-      apiKey: process.env.OPEN_ROUTER_KEY,
-    });
+    const key =
+      process.env.OPEN_ROUTER_KEY || process.env.VITE_OPEN_ROUTER_KEY;
+    if (!key) {
+      console.error(
+        "❌ OPEN_ROUTER_KEY (or VITE_OPEN_ROUTER_KEY) is not set in environment!"
+      );
+    } else {
+      console.log(
+        `✅ OpenRouter key loaded: ${key.slice(0, 10)}...${key.slice(-4)} (length: ${key.length})`
+      );
+    }
+    openrouter = new OpenRouter({ apiKey: key });
   }
   return openrouter;
 }
