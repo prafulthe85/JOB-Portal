@@ -1,11 +1,14 @@
-// src/components/Loader.jsx
 import React from "react";
-import "./loader.css"; // Add some styles for your loader
+import "./loader.css";
 
 const Loader = () => {
   return (
     <div className="loader-container">
-      <div className="loader"></div>
+      <div className="loader-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { RiLock2Fill } from "react-icons/ri";
@@ -16,7 +16,20 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
 
+  const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
+  const roleDropdownRef = useRef(null);
+
   const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (roleDropdownRef.current && !roleDropdownRef.current.contains(e.target)) {
+        setRoleDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -62,13 +75,33 @@ const Register = () => {
           <form>
             <div className="inputTag">
               <label>Register As</label>
-              <div>
-                <select value={role} onChange={(e) => setRole(e.target.value)}>
-                  <option value="">Select Role</option>
-                  <option value="Employer">Employer</option>
-                  <option value="Job Seeker">Job Seeker</option>
-                </select>
-                <FaRegUser />
+              <div className="auth-role-field" ref={roleDropdownRef}>
+                <button
+                  type="button"
+                  className={`auth-role-btn${roleDropdownOpen ? " open" : ""}${!role ? " placeholder" : ""}`}
+                  onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
+                >
+                  {role || "Select Role"}
+                  <span className="auth-role-chevron">▼</span>
+                </button>
+                {roleDropdownOpen && (
+                  <div className="auth-role-list">
+                    {["Employer", "Job Seeker"].map((opt) => (
+                      <div
+                        key={opt}
+                        className={`auth-role-item${role === opt ? " selected" : ""}`}
+                        onClick={() => {
+                          setRole(opt);
+                          setRoleDropdownOpen(false);
+                        }}
+                      >
+                        <span className="auth-role-dot"></span>
+                        {opt}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <span className="auth-icon-box"><FaRegUser /></span>
               </div>
             </div>
             <div className="inputTag">

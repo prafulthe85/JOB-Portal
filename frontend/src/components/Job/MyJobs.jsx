@@ -216,34 +216,19 @@ const MyJobs = () => {
                           </select>
                         </div>
                         <div>
-                          <span>
-                            Salary:{" "}
-                            {editingMode === element._id ? (
-                              <input
-                                type="string"
-                                value={element.salary}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    element._id,
-                                    "salary",
-                                    e.target.value
-                                  )
-                                }
-                                style={{
-                                  appearance: "textfield",
-                                  MozAppearance: "textfield",
-                                  WebkitAppearance: "none",
-                                }}
-                              />
-                            ) : (
-                              <span>
-                                ₹
-                                {Number(element.salary)?.toLocaleString(
-                                  "en-IN"
-                                ) || "Not Provided"}
-                              </span>
-                            )}
-                          </span>
+                          <span>Salary:</span>
+                          <input
+                            type="text"
+                            disabled={editingMode !== element._id}
+                            value={element.salary}
+                            onChange={(e) =>
+                              handleInputChange(
+                                element._id,
+                                "salary",
+                                e.target.value
+                              )
+                            }
+                          />
                         </div>
 
                         <div>

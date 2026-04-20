@@ -1,9 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
 import Loader from "../Loader";
+
+const CATEGORIES = [
+  "Graphics & Design",
+  "Mobile App Development",
+  "Frontend Web Development",
+  "Backend Web Development",
+  "Account & Finance",
+  "Artificial Intelligence",
+  "Video Animation",
+  "Software Engineer",
+  "DevOps Engineer",
+  "Other",
+];
 
 const PostJob = () => {
   const [title, setTitle] = useState("");
@@ -15,7 +28,10 @@ const PostJob = () => {
   const [salary, setSalary] = useState("");
   const [aiPrompt, setAiPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [apiErrorModal, setApiErrorModal] = useState(false);
 
+  const dropdownRef = useRef(null);
   const { isAuthorized, user } = useContext(Context);
   const navigateTo = useNavigate();
 
@@ -24,30 +40,30 @@ const PostJob = () => {
       setIsLoading(false);
     }, 500);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleJobPost = async (e) => {
     setIsLoading(true);
     e.preventDefault();
     await axios
       .post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/job/post`,
-        {
-          title,
-          description,
-          category,
-          country,
-          city,
-          companyName,
-          salary,
-        },
+        { title, description, category, country, city, companyName, salary },
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       )
       .then((res) => {
-        console.log("res", res);
         toast.success(res.data.message);
         if (res.data.success) {
           setTitle("");
@@ -62,27 +78,11 @@ const PostJob = () => {
         navigateTo("/job/me");
       })
       .catch((err) => {
-        toast.error(err.response.data.message);
+        toast.error(err.response?.data?.message || "Failed to post job");
       })
       .finally(() => {
-        setIsLoading(false); // Hide the loader after the process is complete
+        setIsLoading(false);
       });
-  };
-
-  const extractJobDetailsNew = (jobDescription) => {
-    try {
-      const jsonStart = jobDescription.indexOf("{");
-      const jsonEnd = jobDescription.lastIndexOf("}");
-
-      if (jsonStart === -1 || jsonEnd === -1)
-        throw new Error("No JSON block found.");
-
-      const jsonString = jobDescription.slice(jsonStart, jsonEnd + 1);
-      return JSON.parse(jsonString);
-    } catch (err) {
-      console.error("❌ JSON Parsing Error:", err.message);
-      return null;
-    }
   };
 
   const handleGenerateJob = async () => {
@@ -91,12 +91,8 @@ const PostJob = () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/job/generate-job`,
-        {
-          aiPrompt,
-        },
-        {
-          withCredentials: true,
-        }
+        { aiPrompt },
+        { withCredentials: true }
       );
 
       if (!res.data?.success) {
@@ -105,48 +101,28 @@ const PostJob = () => {
       }
       const job = res.data;
 
-      const allowedCategories = [
-        "Graphics & Design",
-        "Mobile App Development",
-        "Frontend Web Development",
-        "Backend Web Development",
-        "Account & Finance",
-        "Artificial Intelligence",
-        "Video Animation",
-        "Software Engineer",
-        "DevOps Engineer",
-        "Data Entry Operator",
-        "Other",
-      ];
-
       setTitle(job.title || "");
       setCountry(job.country || "");
       setCity(job.city || "");
       setCompanyName(job.companyName || "");
       setSalary(job.salary || "");
-      const incomingCategory = job.category || "";
 
-      const categoryToSet = allowedCategories.includes(incomingCategory)
-        ? incomingCategory
+      const categoryToSet = CATEGORIES.includes(job.category || "")
+        ? job.category
         : "Other";
-
       setCategory(categoryToSet);
 
       if (job.description) {
         const { requirement, experience, skills, responsibility } =
           job.description;
-
         const formattedDescription = `Job Description:\n\n\nRequirement: ${requirement}\n\nExperience: ${experience}\n\nSkills: ${skills}\n\nResponsibility: ${responsibility}`;
-
         setDescription(formattedDescription);
       }
-
-      console.log("🎯 Fields set from AI response:", job);
     } catch (err) {
       console.error("Error generating job:", err);
-      toast.err("Failed to generate job details. Please try again.");
+      setApiErrorModal(true);
     } finally {
-      setIsLoading(false); // Hide loader
+      setIsLoading(false);
     }
   };
 
@@ -187,31 +163,37 @@ const PostJob = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Job Title"
               />
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="">Select Category</option>
-                <option value="Graphics & Design">Graphics & Design</option>
-                <option value="Mobile App Development">
-                  Mobile App Development
-                </option>
-                <option value="Frontend Web Development">
-                  Frontend Web Development
-                </option>
-                <option value="Backend Web Development">
-                  Backend Web Development
-                </option>
-                <option value="Account & Finance">Account & Finance</option>
-                <option value="Artificial Intelligence">
-                  Artificial Intelligence
-                </option>
-                <option value="Video Animation">Video Animation</option>
-                <option value="Software Engineer">Software Engineer</option>
-
-                <option value="DevOps Engineer">DevOps Engineer</option>
-                <option value="Other">Other</option>
-              </select>
+              <div className="custom-dropdown" ref={dropdownRef}>
+                <button
+                  type="button"
+                  className={`custom-dropdown-trigger${
+                    dropdownOpen ? " open" : ""
+                  }${!category ? " placeholder" : ""}`}
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                >
+                  {category || "Select Category"}
+                  <span className="dropdown-arrow">▼</span>
+                </button>
+                {dropdownOpen && (
+                  <div className="custom-dropdown-menu">
+                    {CATEGORIES.map((cat) => (
+                      <div
+                        key={cat}
+                        className={`custom-dropdown-option${
+                          category === cat ? " selected" : ""
+                        }`}
+                        onClick={() => {
+                          setCategory(cat);
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        <span className="option-dot"></span>
+                        {cat}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="wrapper">
               <input
@@ -233,9 +215,9 @@ const PostJob = () => {
               onChange={(e) => setCompanyName(e.target.value)}
               placeholder="Company Name"
             />
-            <div className="">
+            <div>
               <input
-                type="string"
+                type="text"
                 id="salary"
                 placeholder="Enter Salary"
                 value={salary}
@@ -258,6 +240,19 @@ const PostJob = () => {
           </form>
         </div>
       </div>
+
+      {apiErrorModal && (
+        <div className="api-error-overlay">
+          <div className="api-error-modal">
+            <h3>AI Generation Failed</h3>
+            <p>
+              The AI API key has expired or reached its usage limit. It will be
+              updated shortly.
+            </p>
+            <button onClick={() => setApiErrorModal(false)}>Got it</button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

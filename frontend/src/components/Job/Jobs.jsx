@@ -12,10 +12,9 @@ const Jobs = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate an API call or any async operation
     setTimeout(() => {
-      setIsLoading(false); // Set loading to false once the data has been fetched
-    }, 500); // Adjust the timeout as needed
+      setIsLoading(false);
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -48,23 +47,25 @@ const Jobs = () => {
           {jobs.jobs &&
             jobs.jobs.map((element) => (
               <div className="card" key={element._id}>
-                <div className="card-header-glow"></div>
+                <div className="job-inner">
+                  <div className="card-header-glow"></div>
 
-                <div className="job-details">
-                  <h2>{element.title}</h2>
-                  <p className="tag">{element.companyName}</p>
-                  <p className="location">{element.city}</p>
-                  <p className="location">Salary: {element.salary}</p>
-                  <p className="location">
-                    Date Posted:{" "}
-                    {new Date(element.jobPostedOn).toLocaleDateString()}
-                  </p>
-                </div>
+                  <div className="job-details">
+                    <h2>{element.title}</h2>
+                    <p className="tag">{element.companyName}</p>
+                    <p className="location">{element.city}</p>
+                    <p className="location">Salary: {element.salary}</p>
+                    <p className="location">
+                      Date Posted:{" "}
+                      {new Date(element.jobPostedOn).toLocaleDateString()}
+                    </p>
+                  </div>
 
-                <div className="job-actions">
-                  <Link to={`/job/${element._id}`} className="btn-details">
-                    View Details
-                  </Link>
+                  <div className="job-actions">
+                    <Link to={`/job/${element._id}`} className="btn-details">
+                      View Details
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}

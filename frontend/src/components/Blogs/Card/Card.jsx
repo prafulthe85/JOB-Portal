@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import "./Card.scss"; // import styles if any
 
-const Card = ({ blog, onDeleteClick }) => {
+const Card = ({ blog, index = 0, onDeleteClick }) => {
   const navigate = useNavigate();
   const imageUrl =
     blog.image || `https://picsum.photos/300/180?random=${blog._id}`;
@@ -39,6 +39,12 @@ const Card = ({ blog, onDeleteClick }) => {
   };
 
   const handleQuality = async () => {
+    if (qualityData) {
+      setShowTooltip((prev) => !prev);
+      return;
+    }
+    if (loadingQuality) return;
+
     try {
       setShowTooltip(true);
       setLoadingQuality(true);
@@ -46,34 +52,30 @@ const Card = ({ blog, onDeleteClick }) => {
       const res = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/blogs/check-blog-quality`,
         { blogId: blog._id },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       const { score, suggestions } = res.data;
-      setQualityData({ score, suggestions });
-      setLoadingQuality(false);
-      console.log("✅ Blog quality result:", { score, suggestions });
       if (!score || !suggestions) throw new Error("No reply from backend");
+      setQualityData({ score, suggestions });
     } catch (err) {
-      console.error("❌ Error checking blog quality:", err);
-      toast.error("Failed to generate job details. Please try again.");
+      console.error("Error checking blog quality:", err);
+      toast.error("Failed to check content score. Please try again.");
       setShowTooltip(false);
+    } finally {
       setLoadingQuality(false);
     }
   };
 
   return (
-    <div className="blog-card">
+    <div className="blog-card" style={{ animationDelay: `${index * 0.07}s` }}>
       <div className="card__image">
         <img src={imageUrl} alt={blog.title} className="card-img" />
       </div>
       <div className="card__left">
         <h2 className="card__title">{blog.title}</h2>
         <p className="card__description">
-          This is a short description of the blog. Learn more about this topic
-          blog. Learn more about this topic by clicking below.
+          {blog.description || "Learn more about this topic by clicking below."}
         </p>
 
         <p className="card__meta">
